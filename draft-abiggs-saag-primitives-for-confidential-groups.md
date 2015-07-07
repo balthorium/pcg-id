@@ -71,6 +71,10 @@ entity
 
 > An entity is a user or automated agent that is uniquely identifiable by an acct URI {{RFC7565}} and for which there exists a key discovery service {{I-D.miller-saag-key-discovery}} through which public keys may be obtained for that URI.
 
+genesis block
+
+> The first block in a group membership block chain.
+
 group
 
 > A group is a set of entities whose membership wish to engage in secure and authenticated multiparty communications over some group communications resource.
@@ -79,13 +83,13 @@ group communications resource
 
 > A group communications resource is any uniquely identifiable streamed or discrete data path that represents an exchange of personal communications between two or more entities.
 
-group membership block chain (GMBC)
-
-> A group membership block chain is a primitive defined by this specification for the purpose of providing an effective means for defining, updating, sharing, and verifying the membership of a group.
-
 group key (GK)
 
 > A group key is an encrypted object containing symmetric key material and associated metadata secured by the public key(s) of other group members.
+
+group membership block chain (GMBC)
+
+> A group membership block chain is a primitive defined by this specification for the purpose of providing an effective means for defining, updating, sharing, and verifying the membership of a group.
 
 This document uses the terminology from {{RFC7515}}, {{RFC7516}}, {{RFC7517}}, and {{RFC7518}} when discussing JOSE technologies.  Most security-related terms in this document are to be understood in the sense defined in {{RFC4949}}.
 
@@ -98,7 +102,7 @@ and "OPTIONAL" are to be interpreted as described in BCP 14, RFC 2119
 
 # Overview
 
-
+This section provides a general overview of three basic constructs for enabling authentication, authorization, and secure key exchange in confidential group communications.
 
 ## Authentication by Public Key Discovery
 
@@ -106,14 +110,15 @@ In the context of this specification, entity authentication is defined as the de
 
 ## Authorization by Group Membership Block Chain
 
-In the context of this specification, authorization is defined as the classification of any given entity as either a "member" or "non-member" with respect to the group.  A member of the group is by definition authorized to receive keying material used to encrypt group communications, and likewise a non-member is not.  A member may also be endowed with privileges to alter the membership of the group.  The means by which group membership classification established, updated, and validated is through operations on a Group Membership Block Chain (GMBC).  
+In the context of this specification, authorization is defined as the classification of any given entity as either a "member" or "non-member" with respect to a group.  A member of the group is by definition authorized to receive keying material used to encrypt group communications, and likewise a non-member is not.  A member is also entitled to alter the membership of the group.  The means by which group membership classification established, updated, and validated is through operations on a Group Membership Block Chain (GMBC).  
 
-A GMBC is an ordered list of data blocks representing a tamper-resistant chronological account of group membership updates.  The first block in the GMBC defines the initial set of group members and each subsequent block represents an addition/removal of one or more other entities to/from the group.  
+A GMBC is an ordered list of data blocks representing a tamper-resistant chronological account of group membership updates.  The first block in the GMBC defines the initial set of group members and each subsequent block represents an addition/removal of one or more other entities to/from the group.  Any entity can create a GMBC, but only members can update it by appending new blocks.
 
 Each block consists of a JSON object signed (as a JWS {{RFC7515}}) with the private key of the entity that created that block within the chain.  That JSON object includes attributes representing the following:
 
   * the acct URI {{RFC7565}} of the entity that created the block,
-  * an array of group membership update operations, and
+  * an array of group membership update operations, 
+  * a timestamp indicating the date and time of the block's creation, and
   * a hash of the preceding block in the membership chain (if any).
 
 A group membership update operation is a JSON object with two fields:
@@ -121,7 +126,7 @@ A group membership update operation is a JSON object with two fields:
   * a tag indicating the operation type ("add" or "remove"), and
   * the acct URI of the entity being either added to or removed from the group.
 
-In addition to the above attributes, the first block of the chain, referred to here as the genesis block, also includes the following attributes:
+In addition to the above attributes the first block of the chain, or genesis block, also includes the following attributes:
 
   * a URI that uniquely identifies the group communications resource, 
   * the acct URI {{RFC7565}} of the group moderator (optional), and
@@ -129,31 +134,31 @@ In addition to the above attributes, the first block of the chain, referred to h
 
 The genesis block must also include at least one "add" operation, though it need not necessarily represent the addition of the entity that created it (i.e. entities may create new groups within which they are not themselves members).
 
-The membership of the group is implicit and may be determined by processing the GMBC in chronological order.  At any given point in time the membership of the group is defined as that set of entities for each of which there exists a block containing an "add" operation and for which there does not exist a subsequent block containing a "remove" operation.
+The membership of the group is implicit and may be determined by processing the GMBC in chronological order.  At any given point in time the membership of the group is defined as that set of entities for which there exists, for each entity, a previously introduced block containing an "add" operation for which there does not exist a subsequent but also previously introduced block containing a "remove" operation.
 
-To protect against unauthorized tampering the GMBC is validated by verifying the signatures of each block, verifying that each non-genesis block contains a valid hash of the preceding block, and verifying that each block is created by an entity that is among the group's membership as determined by the segment of chain preceding that block.  Block signature verification is made possible through the knowledge of each member's acct URI and through the employment of key discovery mechanisms defined in {{I-D.miller-saag-key-discovery}}. 
+To protect against unauthorized tampering the GMBC is validated by verifying the signatures of each block, verifying that each non-genesis block contains a valid hash of the preceding block, and verifying that each block is created by an entity that is among the group's membership as determined by the segment of chain preceding that block.  Block signature verification is made possible through the key discovery mechanisms defined in {{I-D.miller-saag-key-discovery}} and the knowledge of each member's acct URI {{RFC7565}}.
 
 ## Key Distribution by Group Keys
 
-A Group Key (GK) is composed of a symmetric encryption key with associated metadata that has been created for the purpose of encrypting confidential communications intended for the exclusive consumption by group members.  This exclusivity of access to the key material is secured by defining the GK as the encryption of this symmetric key and metadata using the public entity key(s) of the other group members.  
+A Group Key (GK) is a symmetric encryption key, with associated metadata, that has been created for the purpose of encrypting confidential group communications.  The exclusivity of access to the key material is achieved by defining the GK as the encryption of this symmetric key and metadata using the public entity key(s) of the other group members.  
 
 More specifically, the cleartext content of a group key is a JSON object including attributes representing the following:
 
   * a URI that uniquely identifies the group key,
-  * the acct URI {{RFC7565}} of the entity that created the group key,
-  * a hash of the genesis node of the GMBC to which the key belongs,
   * a JWK {{RFC7517}} that represents the symmetric key material, and
   * a timestamp indicating a time beyond which the key should not be used for encryption.
 
-This JSON object is encrypted in a JWE {{RFC7516}} JSON serialization with one or more recipients.  In unmoderated groups the resulting JSON serialization must include each other member of the group as determined by the most recently available and validated GMBC.  In moderated groups the resulting JSON serialization need only include the moderator as the recipient.
+This JSON object is encrypted in a JWE {{RFC7516}} JSON serialization with one or more recipients.  In unmoderated groups the resulting JSON serialization must include each other member of the group as determined by the current and validated GMBC.  In moderated groups the resulting JSON serialization may include as a recipient just the moderator (e.g. when an entity shares a new GK) or just one member (e.g. when the moderator shares a GK with a member that has requested it).
 
-Group keys may be created by members and non-members alike.  A non-member may generate a group key as described above and use it to encrypt its own communications to the group.  This can be a useful property as it provides for "write only" capability to the confidential channel.  Note that the authentication of origin of encrypted data shared over the group communications resource is expressly out of scope for this specification.
+GKs may be created by members and non-members alike.  A non-member may generate a GK as described above and use it to encrypt its own communications to the group.  This can be a useful property as it provides for a confidential "write only" capability to the group communications resource.  
 
-A group may have any number of group keys associated with it.  Each member of a group must use its own group key for purposes of encryption and shares this group key with the remainder of the group for purposes of decryption.  A member must not re-use a group key created by another entity, as that other entity may not itself be a member (as mentioned above).
+A group may have any number of GKs associated with it.  Each member of a group must use its own GK for purposes of encryption and shares this GK with the remainder of the group for purposes of decryption.  A member should not re-use a GK provided by another entity as that other entity may not necessarily be a member.
 
-It is recommended that all entities that share encrypted content over the group communications resource rotate their group keys regularly so as to mitigate against vulnerabilities that are exacerbated by the extended use of individual keys.
+Upon receiving and validating an update to the GMBC that includes "remove" operations, each entity must discard their encryption GK and produce a new encryption GK for which the recipients reflect the updated GMBC membership.  This is necessary to ensure that new members are able to decrypt subsequent communications but not prior communications.  Perhaps more importantly, this also ensures that former members are not able to decrypt subsequent group communications.  In moderated groups the moderator may implement a policy where it permits new group members to request previously created GKs.
 
-# Deployment Patterns
+It is recommended that all entities that share encrypted content over the group communications resource rotate their GKs regularly so as to mitigate against vulnerabilities that are exacerbated by the extended use of individual keys.
+
+# Deployment Classes
 
 The preceding sections describe structural primitives for authenticating and authorizing entities by virtue of their group membership as defined by a GMBC, and for the exclusive sharing of encryption key material among members through an associated set of GKs.  While  these provide the building blocks for establishing confidential group communications, the means by which these objects are exchanged among members has not been discussed and is generally regarded as out of scope for this specification.  With that said, it remains worthwhile to discuss two general patterns of deployment and to describe their practical structure.  These patterns may be described as "moderated groups" and "unmoderated groups".
 
