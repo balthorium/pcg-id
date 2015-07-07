@@ -41,7 +41,7 @@ informative:
   
 --- abstract
 
-Insert pithy abstract here.
+This specification defines generalized primitives for use in establishing end-to-end confidentiality in multiparty communications.  These primitives address three essential elements of secure group communications: authentication, group membership, and secure key exchange.  A core objective of this specification is to define these primitives as common constructs for private group communications and in a manner that allows for flexibility in how they are integrated and deployed as part of new and existing group communications applications. 
 
 --- middle
 
