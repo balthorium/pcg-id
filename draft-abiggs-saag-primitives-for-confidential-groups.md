@@ -59,11 +59,11 @@ Authorization is based on the group membership classification of authenticated e
 
 The secure exchange of keys is based on existing key wrapping standards which allow for secure multicast of key material to authenticated recipients.  This strategy builds on the GMBC based authorization model by taking advantage of reliable group membership classification when addressing wrapped keys to other members.
 
-This specification takes particular care to define these primitives in such a way as they may be suitable for both centralized and decentralized deployment patterns.  It is also a goal of this document to describe these primitives in terms of accepted and modern standards in cryptographic technology and infrastructure.
+A goal of this specification is to define these primitives in such a way as they may be suitable for both centralized and decentralized deployment patterns.  It is also a goal to describe these primitives in terms of existing and accepted standards in cryptographic technology and infrastructure wherever practical.
 
 A non-goal of this specification is to define the means by which these primitives are exchanged among interoperating entities involved in group communications.  Rather these are building blocks for extending group confidentiality to both new and existing communications and content sharing protocols.  With that in mind, however, this specification does advance the notion of recognizing two general classes of deployment for these primitives: "moderated" and "unmoderated".  
 
-Another non-goal of this specification is the authentication of sender identity for encrypted data exchanged over a confidential group communications resource supported by the primitives described here.  Care is taken to ensure that only authenticated members of a group may decipher secured communications, however the means by which group members may reliably identify the sender of some communications data is out of scope for this specification. 
+An additional non-goal of this specification is the establishment of mechanisms for the authentication of sender identity for encrypted data exchanged over a confidential group communications resource.  Care is taken to ensure that only authenticated members of a group may decipher secured communications, however the means by which group members may reliably identify the originator of some particular communications data is out of scope for this specification. 
 
 ## Terminology {#terminology}
 
@@ -108,7 +108,7 @@ In the context of this specification, entity authentication is defined as the de
 
 In the context of this specification, authorization is defined as the classification of any given entity as either a "member" or "non-member" with respect to the group.  A member of the group is by definition authorized to receive keying material used to encrypt group communications, and likewise a non-member is not.  A member may also be endowed with privileges to alter the membership of the group.  The means by which group membership classification established, updated, and validated is through operations on a Group Membership Block Chain (GMBC).  
 
-A GMBC is an ordered list of data blocks representing a tamper-resistent chronological account of group membership updates.  The first block in the GMBC defines the initial set of group members and each subsequent block represents an addition/removal of one or more other entities to/from the group.  
+A GMBC is an ordered list of data blocks representing a tamper-resistant chronological account of group membership updates.  The first block in the GMBC defines the initial set of group members and each subsequent block represents an addition/removal of one or more other entities to/from the group.  
 
 Each block consists of a JSON object signed (as a JWS {{RFC7515}}) with the private key of the entity that created that block within the chain.  That JSON object includes attributes representing the following:
 
