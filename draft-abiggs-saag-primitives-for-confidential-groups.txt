@@ -117,11 +117,11 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
    authorization model by taking advantage of reliable group membership
    classification when addressing wrapped keys to other members.
 
-   This specification takes particular care to define these primitives
-   in such a way as they may be suitable for both centralized and
-   decentralized deployment patterns.  It is also a goal of this
-   document to describe these primitives in terms of accepted and modern
-   standards in cryptographic technology and infrastructure.
+   A goal of this specification is to define these primitives in such a
+   way as they may be suitable for both centralized and decentralized
+   deployment patterns.  It is also a goal to describe these primitives
+   in terms of existing and accepted standards in cryptographic
+   technology and infrastructure wherever practical.
 
    A non-goal of this specification is to define the means by which
    these primitives are exchanged among interoperating entities involved
@@ -132,13 +132,13 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
    two general classes of deployment for these primitives: "moderated"
    and "unmoderated".
 
-   Another non-goal of this specification is the authentication of
-   sender identity for encrypted data exchanged over a confidential
-   group communications resource supported by the primitives described
-   here.  Care is taken to ensure that only authenticated members of a
-   group may decipher secured communications, however the means by which
-   group members may reliably identify the sender of some communications
-   data is out of scope for this specification.
+   An additional non-goal of this specification is the establishment of
+   mechanisms for the authentication of sender identity for encrypted
+   data exchanged over a confidential group communications resource.
+   Care is taken to ensure that only authenticated members of a group
+   may decipher secured communications, however the means by which group
+   members may reliably identify the originator of some particular
+   communications data is out of scope for this specification.
 
 1.1.  Terminology
 
@@ -227,7 +227,7 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
 
    A GMBC is an ordered list of data blocks representing a tamper-
-   resistent chronological account of group membership updates.  The
+   resistant chronological account of group membership updates.  The
    first block in the GMBC defines the initial set of group members and
    each subsequent block represents an addition/removal of one or more
    other entities to/from the group.
