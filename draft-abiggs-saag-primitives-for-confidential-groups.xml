@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <?xml-stylesheet type="text/xsl" href="rfc2629.xslt" ?>
+
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+<!ENTITY RFC2119 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC4949 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4949.xml">
+<!ENTITY RFC7565 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7565.xml">
+<!ENTITY RFC7515 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7515.xml">
+<!ENTITY RFC7516 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7516.xml">
+<!ENTITY RFC7517 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7517.xml">
+<!ENTITY RFC7518 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7518.xml">
+<!ENTITY I-D.miller-saag-key-discovery SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.miller-saag-key-discovery.xml">
+]>
+
+<rfc ipr="trust200902" docName="draft-abiggs-saag-primitives-for-confidential-groups-00" category="std">
+
+<?rfc toc="yes"?>
+<?rfc sortrefs="yes"?>
+<?rfc symrefs="yes"?>
+
+  <front>
+    <title abbrev="primitives-for-confidential-group-communications">Primitives for Confidential Group Communications</title>
+
+    <author initials="A." surname="Biggs" fullname="Andrew Biggs">
+      <organization>Cisco Systems</organization>
+      <address>
+        <email>adb@cisco.com</email>
+      </address>
+    </author>
+    <author initials="S." surname="Cooley" fullname="Shaun Cooley">
+      <organization>Cisco Systems</organization>
+      <address>
+        <email>shcooley@cisco.com</email>
+      </address>
+    </author>
+
+    <date year="2015" month="July" day="03"/>
+
+    
+    
+    
+
+    <abstract>
+
+
+<t>Insert pithy abstract here.</t>
+
+
+
+    </abstract>
+
+
+  </front>
+
+  <middle>
+
+
+<section anchor="introduction" title="Introduction">
+
+<t>This specification defines application agnostic primitives for use in establishing authorization and end-to-end confidentiality in multiparty communications.  These primitives address three essential elements of secure group communications:</t>
+
+<t><list style="symbols">
+  <t>Authentication</t>
+  <t>Group Membership</t>
+  <t>Secure Key Exchange </t>
+</list></t>
+
+<t>Authentication is based on the identification of interoperating entities by acct URI and proof of possession of the private counterpart of a public key discoverable through a key discovery service <xref target="I-D.miller-saag-key-discovery"/> available from a well-known URL.</t>
+
+<t>Authorization is based on the group membership classification of authenticated entities, as represented in the form of a Group Membership Block Chain (GMBC) structure defined by this specification.  Critical properties of the GMBC are tamper-resistance, efficient mutability, deployability, and suitability for decentralized management.</t>
+
+<t>The secure exchange of keys is based on existing key wrapping standards which allow for secure multicast of key material to authenticated recipients.  This strategy builds on the GMBC based authorization model by taking advantage of reliable group membership classification when addressing wrapped keys to other members.</t>
+
+<t>This specification takes particular care to define these primitives in such a way as they may be suitable for both centralized and decentralized deployment patterns.  It is also a goal of this document to describe these primitives in terms of accepted and modern standards in cryptographic technology and infrastructure.</t>
+
+<t>A non-goal of this specification is to define the means by which these primitives are exchanged among interoperating entities involved in group communications.  Rather these are building blocks for extending group confidentiality to both new and existing communications and content sharing protocols.  With that in mind, however, this specification does advance the notion of recognizing two general classes of deployment for these primitives: “moderated” and “unmoderated”.  </t>
+
+<t>Another non-goal of this specification is the authentication of sender identity for encrypted data exchanged over a confidential group communications resource supported by the primitives described here.  Care is taken to ensure that only authenticated members of a group may decipher secured communications, however the means by which group members may reliably identify the sender of some communications data is out of scope for this specification. </t>
+
+<section anchor="terminology" title="Terminology">
+
+<t>entity</t>
+
+<t><list style='empty'>
+  <t>An entity is a user or automated agent that is uniquely identifiable by an acct URI <xref target="RFC7565"/> and for which there exists a key discovery service <xref target="I-D.miller-saag-key-discovery"/> through which public keys may be obtained for that URI.</t>
+</list></t>
+
+<t>group</t>
+
+<t><list style='empty'>
+  <t>A group is a set of entities whose membership wish to engage in secure and authenticated multiparty communications over some group communications resource.</t>
+</list></t>
+
+<t>group communications resource</t>
+
+<t><list style='empty'>
+  <t>A group communications resource is any uniquely identifiable streamed or discrete data path that represents an exchange of personal communications between two or more entities.</t>
+</list></t>
+
+<t>group membership block chain (GMBC)</t>
+
+<t><list style='empty'>
+  <t>A group membership block chain is a primitive defined by this specification for the purpose of providing an effective means for defining, updating, sharing, and verifying the membership of a group.</t>
+</list></t>
+
+<t>group key (GK)</t>
+
+<t><list style='empty'>
+  <t>A group key is an encrypted object containing symmetric key material and associated metadata secured by the public key(s) of other group members.</t>
+</list></t>
+
+<t>This document uses the terminology from <xref target="RFC7515"/>, <xref target="RFC7516"/>, <xref target="RFC7517"/>, and <xref target="RFC7518"/> when discussing JOSE technologies.  Most security-related terms in this document are to be understood in the sense defined in <xref target="RFC4949"/>.</t>
+
+</section>
+<section anchor="notational-conventions" title="Notational Conventions">
+
+<t>In this document, the key words “MUST”, “MUST NOT”, “REQUIRED”,
+“SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “MAY”,
+and “OPTIONAL” are to be interpreted as described in BCP 14, RFC 2119
+<xref target="RFC2119"/>.</t>
+
+</section>
+</section>
+<section anchor="overview" title="Overview">
+
+<section anchor="authentication-by-public-key-discovery" title="Authentication by Public Key Discovery">
+
+<t>In the context of this specification, entity authentication is defined as the demonstration of possession of the private component of an asymmetric key pair.  Specifically, an entity uniquely identified by an acct URI <xref target="RFC7565"/> may be authenticated by demonstrating possession of the private counterpart of one or more public keys as may be discovered using that acct URI and the mechanisms described in <xref target="I-D.miller-saag-key-discovery"/>.  </t>
+
+</section>
+<section anchor="authorization-by-group-membership-block-chain" title="Authorization by Group Membership Block Chain">
+
+<t>In the context of this specification, authorization is defined as the classification of any given entity as either a “member” or “non-member” with respect to the group.  A member of the group is by definition authorized to receive keying material used to encrypt group communications, and likewise a non-member is not.  A member may also be endowed with privileges to alter the membership of the group.  The means by which group membership classification established, updated, and validated is through operations on a Group Membership Block Chain (GMBC).  </t>
+
+<t>A GMBC is an ordered list of data blocks representing a tamper-resistent chronological account of group membership updates.  The first block in the GMBC defines the initial set of group members and each subsequent block represents an addition/removal of one or more other entities to/from the group.  </t>
+
+<t>Each block consists of a JSON object signed (as a JWS <xref target="RFC7515"/>) with the private key of the entity that created that block within the chain.  That JSON object includes attributes representing the following:</t>
+
+<t><list style="symbols">
+  <t>the acct URI <xref target="RFC7565"/> of the entity that created the block,</t>
+  <t>an array of group membership update operations, and</t>
+  <t>a hash of the preceding block in the membership chain (if any).</t>
+</list></t>
+
+<t>A group membership update operation is a JSON object with two fields:</t>
+
+<t><list style="symbols">
+  <t>a tag indicating the operation type (“add” or “remove”), and</t>
+  <t>the acct URI of the entity being either added to or removed from the group.</t>
+</list></t>
+
+<t>In addition to the above attributes, the first block of the chain, referred to here as the genesis block, also includes the following attributes:</t>
+
+<t><list style="symbols">
+  <t>a URI that uniquely identifies the group communications resource, </t>
+  <t>the acct URI <xref target="RFC7565"/> of the group moderator (optional), and</t>
+  <t>a nonce.</t>
+</list></t>
+
+<t>The genesis block must also include at least one “add” operation, though it need not necessarily represent the addition of the entity that created it (i.e. entities may create new groups within which they are not themselves members).</t>
+
+<t>The membership of the group is implicit and may be determined by processing the GMBC in chronological order.  At any given point in time the membership of the group is defined as that set of entities for each of which there exists a block containing an “add” operation and for which there does not exist a subsequent block containing a “remove” operation.</t>
+
+<t>To protect against unauthorized tampering the GMBC is validated by verifying the signatures of each block, verifying that each non-genesis block contains a valid hash of the preceding block, and verifying that each block is created by an entity that is among the group’s membership as determined by the segment of chain preceding that block.  Block signature verification is made possible through the knowledge of each member’s acct URI and through the employment of key discovery mechanisms defined in <xref target="I-D.miller-saag-key-discovery"/>. </t>
+
+</section>
+<section anchor="key-distribution-by-group-keys" title="Key Distribution by Group Keys">
+
+<t>A Group Key (GK) is composed of a symmetric encryption key with associated metadata that has been created for the purpose of encrypting confidential communications intended for the exclusive consumption by group members.  This exclusivity of access to the key material is secured by defining the GK as the encryption of this symmetric key and metadata using the public entity key(s) of the other group members.  </t>
+
+<t>More specifically, the cleartext content of a group key is a JSON object including attributes representing the following:</t>
+
+<t><list style="symbols">
+  <t>a URI that uniquely identifies the group key,</t>
+  <t>the acct URI <xref target="RFC7565"/> of the entity that created the group key,</t>
+  <t>a hash of the genesis node of the GMBC to which the key belongs,</t>
+  <t>a JWK <xref target="RFC7517"/> that represents the symmetric key material, and</t>
+  <t>a timestamp indicating a time beyond which the key should not be used for encryption.</t>
+</list></t>
+
+<t>This JSON object is encrypted in a JWE <xref target="RFC7516"/> JSON serialization with one or more recipients.  In unmoderated groups the resulting JSON serialization must include each other member of the group as determined by the most recently available and validated GMBC.  In moderated groups the resulting JSON serialization need only include the moderator as the recipient.</t>
+
+<t>Group keys may be created by members and non-members alike.  A non-member may generate a group key as described above and use it to encrypt its own communications to the group.  This can be a useful property as it provides for “write only” capability to the confidential channel.  Note that the authentication of origin of encrypted data shared over the group communications resource is expressly out of scope for this specification.</t>
+
+<t>A group may have any number of group keys associated with it.  Each member of a group must use its own group key for purposes of encryption and shares this group key with the remainder of the group for purposes of decryption.  A member must not re-use a group key created by another entity, as that other entity may not itself be a member (as mentioned above).</t>
+
+<t>It is recommended that all entities that share encrypted content over the group communications resource rotate their group keys regularly so as to mitigate against vulnerabilities that are exacerbated by the extended use of individual keys.</t>
+
+</section>
+</section>
+<section anchor="deployment-patterns" title="Deployment Patterns">
+
+<t>The preceding sections describe structural primitives for authenticating and authorizing entities by virtue of their group membership as defined by a GMBC, and for the exclusive sharing of encryption key material among members through an associated set of GKs.  While  these provide the building blocks for establishing confidential group communications, the means by which these objects are exchanged among members has not been discussed and is generally regarded as out of scope for this specification.  With that said, it remains worthwhile to discuss two general patterns of deployment and to describe their practical structure.  These patterns may be described as “moderated groups” and “unmoderated groups”.</t>
+
+<section anchor="unmoderated" title="Unmoderated">
+
+<t>An unmoderated group is characterized by the absence of a moderator attribute in the GMBC genesis block and therefore the absence of a privileged member within the group through which GMBC and GK objects may be brokered.  In an unmoderated group these objects may instead be exchanged through the group communications resource either in-band with these communications themselves or through in-band references to external repositories.  Both the GMBC and GK objects are designed to be hardened against tampering and exposure of sensitive data, and as such may be reasonably exchange through either public or private channels.</t>
+
+</section>
+<section anchor="moderated" title="Moderated">
+
+<t>A moderated group is characterized by the presence of a moderator attribute in the GMBC genesis block.  The entity represented by the acct URI <xref target="RFC7565"/> given in the moderator attribute is regarded as a member and furthermore cannot be removed from the group.  </t>
+
+<t>The moderator serves as a facilitator for the exchange of GMBC and GK objects.  In particular it supports the following interactions with other members of the group:</t>
+
+<t><list style="symbols">
+  <t>a moderator will accept new GMBC blocks from other members</t>
+  <t>a moderator will accept requests for GMBC updates from other members</t>
+  <t>a moderator will accept new GKs from other members</t>
+  <t>a moderator will accept requests for GKs from other members</t>
+</list></t>
+
+<t>The protocol through which a moderator services these requests is out of scope for this specification.   </t>
+
+</section>
+</section>
+<section anchor="mandatory-to-implement" title="Mandatory-to-Implement">
+
+</section>
+<section anchor="security-considerations" title="Security Considerations">
+
+</section>
+<section anchor="appendix-a-acknowledgments" title="Appendix A. Acknowledgments">
+
+</section>
+<section anchor="appendix-b-document-history" title="Appendix B. Document History">
+
+<t>-00</t>
+
+<t><list style="symbols">
+  <t>Initial draft.</t>
+</list></t>
+
+</section>
+
+
+  </middle>
+
+  <back>
+
+    <references title='Normative References'>
+
+&RFC2119;
+&RFC4949;
+&RFC7565;
+&RFC7515;
+&RFC7516;
+&RFC7517;
+&RFC7518;
+&I-D.miller-saag-key-discovery;
+
+
+    </references>
+
+
+
+
+  </back>
+</rfc>
+
