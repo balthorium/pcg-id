@@ -431,17 +431,17 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
    means by which any GMBC update or new GK produced by a member may be
    delivered to each other group member in a timely fashion.
 
-   Even in a context of very low latency communications the fact that
-   there is no single entity providing an authoritative and definitively
-   current version of the GMBC means that members can make concurrent
-   updates to their own copies of the GMBC and thereby create conflicts
-   in their collective understanding of group membership history.  Such
-   conflicts are manifest as a divergence where each GMBC has a
-   different block, let us call them B and B', appended to some block A
-   that they have in common.  A member encountering this condition must
-   select either one of the two GMBCs in its entirety and discard the
-   other.  This selection is performed by observing the hash values of B
-   and B' and selecting the GMBC to which the block with the numerically
+   In a decentralized group the fact that there is no single entity
+   providing an authoritative and definitively current version of the
+   GMBC means that members can make concurrent updates to their own
+   copies of the GMBC and thereby create conflicts in their collective
+   understanding of group membership history.  Such conflicts are
+   manifest as a divergence where each GMBC has a different block, let
+   us call them B and B', appended to some block A that they have in
+   common.  A member encountering this condition must select either one
+   of the two GMBCs in its entirety and discard the other.  This
+   selection is performed by observing the hash values of blocks B and
+   B' and selecting the GMBC to which the block with the numerically
 
 
 
@@ -454,8 +454,8 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
    finds that a block that it had itself previously introduced to the
    discarded GMBC is not represented in the retained GMBC, that entity
    is responsible for appending a new block to the retained GMBC to
-   represent that membership update and, of course, share that update to
-   other members.
+   represent that membership update (and, of course, share that update
+   to other members).
 
 3.2.  Centralized Groups
 
