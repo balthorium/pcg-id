@@ -83,8 +83,9 @@ Table of Contents
      5.2.  Group Membership Block Chain  . . . . . . . . . . . . . .  12
      5.3.  Group Key . . . . . . . . . . . . . . . . . . . . . . . .  13
    6.  Security Considerations . . . . . . . . . . . . . . . . . . .  13
-   7.  Appendix A. Document History  . . . . . . . . . . . . . . . .  13
-   8.  Normative References  . . . . . . . . . . . . . . . . . . . .  13
+   7.  Appendix A. Acknowledgments . . . . . . . . . . . . . . . . .  13
+   8.  Appendix B. Document History  . . . . . . . . . . . . . . . .  13
+   9.  Normative References  . . . . . . . . . . . . . . . . . . . .  14
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  14
 
 1.  Introduction
@@ -105,7 +106,6 @@ Table of Contents
    counterpart of a public key discoverable through a key discovery
    service [I-D.miller-saag-key-discovery] available from a well-known
    URL.
-
 
 
 
@@ -353,8 +353,7 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
    o  an encrypted [RFC7517] that represents the symmetric key material,
       and
 
-   o  a timestamp indicating a time beyond which the key should not be
-      used for encryption.
+   o  a timestamp indicating the date and time the GK was created.
 
    The JWK attribute value is encrypted in a JWE [RFC7516] JSON
    serialization with one or more recipients.  In decentralized groups
@@ -386,6 +385,7 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
    necessary to ensure that new members are able to decrypt subsequent
    communications but not prior communications.  Perhaps more
    importantly, this also ensures that former members are not able to
+   decrypt subsequent group communications.  In centralized groups the
 
 
 
@@ -394,7 +394,6 @@ Biggs & Cooley           Expires January 4, 2016                [Page 7]
 Internet-Draprimitives-for-confidential-group-communications   July 2015
 
 
-   decrypt subsequent group communications.  In centralized groups the
    curator may implement a policy where it permits new group members to
    request previously created GKs.
 
@@ -441,7 +440,8 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
    GMBC Post
 
-
+      When adding or removing members from a group, a member will submit
+      a new GMBC block to the curator representing that change.  The
 
 
 
@@ -450,8 +450,6 @@ Biggs & Cooley           Expires January 4, 2016                [Page 8]
 Internet-Draprimitives-for-confidential-group-communications   July 2015
 
 
-      When adding or removing members from a group, a member will submit
-      a new GMBC block to the curator representing that change.  The
       curator will verify that the block is signed by a member of the
       group and that the hash attribute of the block represents the hash
       of the current tail end of the chain.  If both checks succeed then
@@ -495,6 +493,8 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
       requested GK except that the key material is re-encrypted using
       the public key of the requesting entity and the GK itself is
       signed using the curator's own public entity key.
+
+
 
 
 
@@ -647,7 +647,7 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
    }
 
    gmbc-block {
-       "entity": uri,
+       "creator": uri,
        "created": date-time,
        "antecedent": string,
        "operations" [ *: operation ]
@@ -676,18 +676,61 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
 5.3.  Group Key
 
+   A GK is composed of JSON encoded blocks, each signed with the private
+   key of the entity that created it (or the curator in centralized
+   groups).  Signing is performed in conformance with the JWS [RFC7515]
+   specification and the block is communicated between entities in the
+   form of a JWS compact serialization.
+
+   The payload of a GK is defined as follows.
+
+   group-key {
+       "uri": uri,
+       "creator": uri,
+       "created": date-time,
+       "block": string,
+       "key": wrapped-key
+   }
+
+   root group-key
+
+   The "key" attribute's value is a JWE JSON serialization as defined in
+   [RFC7516] with one or more recipients (either one recipient for each
+   member of the group at the time the key was created, or the group
+   curator).  The payload of that JWE is a JWK [RFC7517] representing a
+   symmetric key.
+
 6.  Security Considerations
 
    Security considerations are discussed throughout this document.
    Additional considerations may be added here as needed.
 
-7.  Appendix A.  Document History
+7.  Appendix A.  Acknowledgments
+
+   This specification is the work of several contributors.  In
+   particular, the following individuals contributed ideas, feedback,
+   and wording that influenced this specification:
+
+   Matt Miller
+
+8.  Appendix B.  Document History
 
    -00
 
    o  Initial draft.
 
-8.  Normative References
+
+
+
+
+
+
+Biggs & Cooley           Expires January 4, 2016               [Page 13]
+
+Internet-Draprimitives-for-confidential-group-communications   July 2015
+
+
+9.  Normative References
 
    [I-D.miller-saag-key-discovery]
               Miller, M. and S. Nandakumar, "Key Discovery Service",
@@ -719,17 +762,6 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
    [RFC7565]  Saint-Andre, P., "The 'acct' URI Scheme", RFC 7565, May
               2015.
 
-
-
-
-
-
-
-Biggs & Cooley           Expires January 4, 2016               [Page 13]
-
-Internet-Draprimitives-for-confidential-group-communications   July 2015
-
-
 Authors' Addresses
 
    Andrew Biggs
@@ -742,38 +774,6 @@ Authors' Addresses
    Cisco Systems
 
    Email: shcooley@cisco.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

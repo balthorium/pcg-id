@@ -154,7 +154,7 @@ More specifically, the payload of the GK is a JSON object including attributes r
   * the acct URI {{RFC7565}} of the creator of the GK,
   * a hash of the GMBC tail block at the time this key was created,
   * an encrypted {{RFC7517}} that represents the symmetric key material, and
-  * a timestamp indicating a time beyond which the key should not be used for encryption.
+  * a timestamp indicating the date and time the GK was created.
 
 The JWK attribute value is encrypted in a JWE {{RFC7516}} JSON serialization with one or more recipients.  In decentralized groups the resulting JSON serialization must include each other member of the group as determined by the current and validated GMBC.  In centralized groups the resulting JSON serialization may include as a recipient just the curator (e.g. when an entity shares a new GK) or just one member (e.g. when the curator shares a GK with a member that has requested it).  The full JSON payload of the GK is signed as a JWS {{RFC7515}} using the creator's private entity key.
 
@@ -263,7 +263,7 @@ operation "Operation" {
 }
 
 gmbc-block {
-    "entity": uri,
+    "creator": uri,
     "created": date-time,
     "antecedent": string,
     "operations" [ *: operation ]
@@ -287,11 +287,35 @@ root gmbc-genesis-block
 
 ## Group Key
 
+A GK is composed of JSON encoded blocks, each signed with the private key of the entity that created it (or the curator in centralized groups).  Signing is performed in conformance with the JWS {{RFC7515}} specification and the block is communicated between entities in the form of a JWS compact serialization.
+
+The payload of a GK is defined as follows.
+
+~~~
+group-key {
+    "uri": uri,
+    "creator": uri,
+    "created": date-time,
+    "block": string,
+    "key": wrapped-key
+}
+
+root group-key
+~~~
+
+The "key" attribute's value is a JWE JSON serialization as defined in {{RFC7516}} with one or more recipients (either one recipient for each member of the group at the time the key was created, or the group curator).  The payload of that JWE is a JWK {{RFC7517}} representing a symmetric key.
+
 # Security Considerations
 
 Security considerations are discussed throughout this document.  Additional considerations may be added here as needed.
 
-# Appendix A. Document History
+# Appendix A. Acknowledgments
+
+This specification is the work of several contributors. In particular, the following individuals contributed ideas, feedback, and wording that influenced this specification:
+
+Matt Miller
+
+# Appendix B. Document History
 
 \-00
 
