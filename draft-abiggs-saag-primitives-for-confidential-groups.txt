@@ -72,14 +72,12 @@ Table of Contents
      2.1.  Authentication by Public Key Discovery  . . . . . . . . .   4
      2.2.  Authorization by Group Membership Block Chain . . . . . .   5
      2.3.  Key Distribution by Group Keys  . . . . . . . . . . . . .   6
-   3.  Group Models  . . . . . . . . . . . . . . . . . . . . . . . .   8
+   3.  Group Models  . . . . . . . . . . . . . . . . . . . . . . . .   7
      3.1.  Unmoderated Groups  . . . . . . . . . . . . . . . . . . .   8
      3.2.  Moderated Groups  . . . . . . . . . . . . . . . . . . . .   8
-   4.  Mandatory-to-Implement  . . . . . . . . . . . . . . . . . . .   9
-   5.  Security Considerations . . . . . . . . . . . . . . . . . . .   9
-   6.  Appendix A. Acknowledgments . . . . . . . . . . . . . . . . .   9
-   7.  Appendix B. Document History  . . . . . . . . . . . . . . . .   9
-   8.  Normative References  . . . . . . . . . . . . . . . . . . . .  10
+   4.  Security Considerations . . . . . . . . . . . . . . . . . . .   9
+   5.  Appendix A. Document History  . . . . . . . . . . . . . . . .   9
+   6.  Normative References  . . . . . . . . . . . . . . . . . . . .   9
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  10
 
 1.  Introduction
@@ -105,6 +103,8 @@ Table of Contents
    authenticated entities, as represented in the form of a Group
    Membership Block Chain (GMBC) structure defined by this
    specification.  Critical properties of the GMBC are tamper-
+   resistance, efficient mutability, broad deployability, and integrity
+   in the context of distributed handling.
 
 
 
@@ -113,9 +113,6 @@ Biggs & Cooley           Expires January 4, 2016                [Page 2]
 
 Internet-Draprimitives-for-confidential-group-communications   July 2015
 
-
-   resistance, efficient mutability, broad deployability, and integrity
-   in the context of distributed handling.
 
    The secure exchange of keys is based on existing key wrapping
    standards which allow for the sharing of encrypted key material with
@@ -162,6 +159,9 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
    group
 
+      A group is a set of entities whose membership wish to engage in
+      secure and authenticated multiparty communications over some group
+      communications resource.
 
 
 
@@ -169,10 +169,6 @@ Biggs & Cooley           Expires January 4, 2016                [Page 3]
 
 Internet-Draprimitives-for-confidential-group-communications   July 2015
 
-
-      A group is a set of entities whose membership wish to engage in
-      secure and authenticated multiparty communications over some group
-      communications resource.
 
    group communications resource
 
@@ -218,6 +214,10 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
    of an asymmetric key pair.  Specifically, an entity uniquely
    identified by an acct URI [RFC7565] may be authenticated by
    demonstrating possession of the private counterpart of one or more
+   public keys as may be discovered using that acct URI and the
+   mechanisms described in [I-D.miller-saag-key-discovery].
+
+
 
 
 
@@ -225,9 +225,6 @@ Biggs & Cooley           Expires January 4, 2016                [Page 4]
 
 Internet-Draprimitives-for-confidential-group-communications   July 2015
 
-
-   public keys as may be discovered using that acct URI and the
-   mechanisms described in [I-D.miller-saag-key-discovery].
 
 2.2.  Authorization by Group Membership Block Chain
 
@@ -274,6 +271,9 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
    o  a URI that uniquely identifies the group communications resource,
 
+   o  the acct URI [RFC7565] of the group moderator (optional), and
+
+   o  a nonce.
 
 
 
@@ -281,10 +281,6 @@ Biggs & Cooley           Expires January 4, 2016                [Page 5]
 
 Internet-Draprimitives-for-confidential-group-communications   July 2015
 
-
-   o  the acct URI [RFC7565] of the group moderator (optional), and
-
-   o  a nonce.
 
    The genesis block must also include at least one "add" operation,
    though it need not necessarily represent the addition of the entity
@@ -329,7 +325,11 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
    o  a hash of the GMBC tail block at the time this key was created,
 
+   o  an encrypted JWK [RFC7517] that represents the symmetric key
+      material, and
 
+   o  a timestamp indicating a time beyond which the key should not be
+      used for encryption.
 
 
 
@@ -337,12 +337,6 @@ Biggs & Cooley           Expires January 4, 2016                [Page 6]
 
 Internet-Draprimitives-for-confidential-group-communications   July 2015
 
-
-   o  an encrypted JWK [RFC7517] that represents the symmetric key
-      material, and
-
-   o  a timestamp indicating a time beyond which the key should not be
-      used for encryption.
 
    The JWK attribute value is encrypted in a JWE [RFC7516] JSON
    serialization with one or more recipients.  In unmoderated groups the
@@ -382,18 +376,6 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
    mitigate against vulnerabilities that are exacerbated by the extended
    use of individual keys.
 
-
-
-
-
-
-
-
-Biggs & Cooley           Expires January 4, 2016                [Page 7]
-
-Internet-Draprimitives-for-confidential-group-communications   July 2015
-
-
 3.  Group Models
 
    While this specification provides definition for constructs that
@@ -404,6 +386,13 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
    confidential group communications and how the primitives defined by
    this specification may be leveraged in each.  These classes may be
    described as "moderated groups" and "unmoderated groups".
+
+
+
+Biggs & Cooley           Expires January 4, 2016                [Page 7]
+
+Internet-Draprimitives-for-confidential-group-communications   July 2015
+
 
 3.1.  Unmoderated Groups
 
@@ -443,13 +432,6 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
    GMBC Get
 
-
-
-Biggs & Cooley           Expires January 4, 2016                [Page 8]
-
-Internet-Draprimitives-for-confidential-group-communications   July 2015
-
-
       Entities may request all or part of the current GMBC from the
       moderator by providing to the GMBC a hash of the last GMBC block
       of which they are aware (or 0x0 if they are requesting the entire
@@ -459,6 +441,15 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
       In some deployments it may be desirable for a moderator to
       immediately multicast GMBC updates to all current members of the
+
+
+
+
+Biggs & Cooley           Expires January 4, 2016                [Page 8]
+
+Internet-Draprimitives-for-confidential-group-communications   July 2015
+
+
       group.  This may be based on either an explicit or automatic/
       implicit subscription model.
 
@@ -486,27 +477,18 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
       using the public key of the requesting entity and the GK itself is
       signed using the moderator's own public entity key.
 
-4.  Mandatory-to-Implement
+4.  Security Considerations
 
-5.  Security Considerations
+   Security considerations are discussed throughout this document.
+   Additional considerations may be added here as needed.
 
-6.  Appendix A.  Acknowledgments
-
-7.  Appendix B.  Document History
+5.  Appendix A.  Document History
 
    -00
 
    o  Initial draft.
 
-
-
-
-Biggs & Cooley           Expires January 4, 2016                [Page 9]
-
-Internet-Draprimitives-for-confidential-group-communications   July 2015
-
-
-8.  Normative References
+6.  Normative References
 
    [I-D.miller-saag-key-discovery]
               Miller, M. and S. Nandakumar, "Key Discovery Service",
@@ -515,6 +497,14 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
+
+
+
+
+Biggs & Cooley           Expires January 4, 2016                [Page 9]
+
+Internet-Draprimitives-for-confidential-group-communications   July 2015
+
 
    [RFC4949]  Shirey, R., "Internet Security Glossary, Version 2", RFC
               4949, August 2007.
@@ -545,6 +535,16 @@ Authors' Addresses
    Cisco Systems
 
    Email: shcooley@cisco.com
+
+
+
+
+
+
+
+
+
+
 
 
 
