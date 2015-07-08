@@ -61,7 +61,7 @@ The secure exchange of keys is based on existing key wrapping standards which al
 
 A goal of this specification is to define these primitives in such a way as they may be suitable for both centralized and distributed management.  It is also a goal to describe these primitives in terms of accepted standards for cryptographic processing and infrastructure.
 
-A non-goal of this specification is to define the means by which these primitives are exchanged among interoperating entities involved in group communications.  Rather these are building blocks for extending group confidentiality to both new and existing communications and content sharing protocols.  With that in mind, however, this specification does advance the notion of recognizing two general classes of deployment for these primitives: "moderated" and "unmoderated".  
+A non-goal of this specification is to define the means by which these primitives are exchanged among interoperating entities involved in group communications.  Rather these are building blocks for extending group confidentiality to both new and existing communications and content sharing protocols.  With that in mind, however, this specification does advance the notion of recognizing two general classes of deployment for these primitives: "centralized" and "decentralized".  
 
 An additional non-goal of this specification is the establishment of mechanisms for the authentication of sender identity for encrypted data exchanged over a confidential group communications resource.  Care is taken to ensure that only authenticated members of a group may decipher secured communications, however the means by which group members may reliably identify the originator of some particular communications data is out of scope for this specification. 
 
@@ -129,7 +129,7 @@ A group membership update operation is a JSON object with two fields:
 In addition to the above attributes the first block of the chain, or genesis block, also includes the following attributes:
 
   * a URI that uniquely identifies the group communications resource, 
-  * the acct URI {{RFC7565}} of the group moderator (optional), and
+  * the acct URI {{RFC7565}} of the group's central authority (optional), and
   * a nonce.
 
 The genesis block must also include at least one "add" operation, though it need not necessarily represent the addition of the entity that created it (i.e. entities may create new groups within which they are not themselves members).
@@ -150,47 +150,47 @@ More specifically, the payload of the GK is a JSON object including attributes r
   * an encrypted JWK {{RFC7517}} that represents the symmetric key material, and
   * a timestamp indicating a time beyond which the key should not be used for encryption.
 
-The JWK attribute value is encrypted in a JWE {{RFC7516}} JSON serialization with one or more recipients.  In unmoderated groups the resulting JSON serialization must include each other member of the group as determined by the current and validated GMBC.  In moderated groups the resulting JSON serialization may include as a recipient just the moderator (e.g. when an entity shares a new GK) or just one member (e.g. when the moderator shares a GK with a member that has requested it).  The full JSON payload of the GK is signed as a JWS {{RFC7515}} using the creator's private entity key.
+The JWK attribute value is encrypted in a JWE {{RFC7516}} JSON serialization with one or more recipients.  In decentralized groups the resulting JSON serialization must include each other member of the group as determined by the current and validated GMBC.  In centralized groups the resulting JSON serialization may include as a recipient just the central authority (e.g. when an entity shares a new GK) or just one member (e.g. when the central authority shares a GK with a member that has requested it).  The full JSON payload of the GK is signed as a JWS {{RFC7515}} using the creator's private entity key.
 
 GKs may be created by members and non-members alike.  A non-member may generate a GK as described above and use it to encrypt its own communications to the group.  This can be a useful property as it provides for a confidential "write only" capability to the group communications resource.  
 
 A group may have any number of GKs associated with it.  Each member of a group must use its own GK for purposes of encryption and shares this GK with the remainder of the group for purposes of decryption.  A member should not re-use a GK provided by another entity as that other entity may not necessarily be a member.
 
-Upon receiving and validating an update to the GMBC that includes "remove" operations, each entity must discard their encryption GK and produce a new encryption GK for which the recipients reflect the updated GMBC membership.  This is necessary to ensure that new members are able to decrypt subsequent communications but not prior communications.  Perhaps more importantly, this also ensures that former members are not able to decrypt subsequent group communications.  In moderated groups the moderator may implement a policy where it permits new group members to request previously created GKs.
+Upon receiving and validating an update to the GMBC that includes "remove" operations, each entity must discard their encryption GK and produce a new encryption GK for which the recipients reflect the updated GMBC membership.  This is necessary to ensure that new members are able to decrypt subsequent communications but not prior communications.  Perhaps more importantly, this also ensures that former members are not able to decrypt subsequent group communications.  In centralized groups the central authority may implement a policy where it permits new group members to request previously created GKs.
 
 It is recommended that all entities that share encrypted content over the group communications resource rotate their GKs regularly so as to mitigate against vulnerabilities that are exacerbated by the extended use of individual keys.
 
 # Group Models
 
-While this specification provides definition for constructs that enable confidential group communications, the means by which these objects may be exchanged among group members is intentionally omitted as this is regarded as out of scope for this specification.  It remains worthwhile, however, to discuss two general classes of confidential group communications and how the primitives defined by this specification may be leveraged in each.  These classes may be described as "moderated groups" and "unmoderated groups".
+While this specification provides definition for constructs that enable confidential group communications, the means by which these objects may be exchanged among group members is intentionally omitted as this is regarded as out of scope for this specification.  It remains worthwhile, however, to discuss two general classes of confidential group communications and how the primitives defined by this specification may be leveraged in each.  These classes may be described as "centralized groups" and "decentralized groups".
 
-## Unmoderated Groups
+## Decentralized Groups
 
-An unmoderated group is characterized by the absence of a moderator attribute in the GMBC genesis block and therefore the absence of a permanent member within the group through which GMBC and GK objects may be exchanged.  In an unmoderated group these objects may instead be exchanged either in-band through the group communications resource itself, or through in-band references to external repositories within which GMBC and GK objects are stored.  Both the GMBC and GK objects are designed to be hardened against tampering and protect sensitive data such that they may be reasonably exchanged through either public or private transports and stores.
+A decentralized group is characterized by the absence of a central authority attribute in the GMBC genesis block and therefore the absence of a permanent member within the group through which GMBC and GK objects may be exchanged.  In a decentralized group these objects may instead be exchanged either in-band through the group communications resource itself, or through in-band references to external repositories within which GMBC and GK objects are stored.  Both the GMBC and GK objects are designed to be hardened against tampering and protect sensitive data such that they may be reasonably exchanged through either public or private transports and stores.
 
-## Moderated Groups
+## Centralized Groups
 
-A moderated group is characterized by the presence of a moderator attribute in the GMBC genesis block.  The moderator attribute identifies an entity by its acct URI {{RFC7565}} and declares that entity as a permanent member of the group which will serve as a facilitator for the exchange of GMBC and GK objects among all group members.  In particular, a moderator will respond to the following types of requests from other entities.  Note that the means by which these operations are carried out between members and the moderator is out of scope for this document.
+A centralized group is characterized by the presence of a central authority attribute in the GMBC genesis block.  The central authority attribute identifies an entity by its acct URI {{RFC7565}} and declares that entity as a permanent member of the group which will serve as a facilitator for the exchange of GMBC and GK objects among all group members.  In particular, a central authority will respond to the following types of requests from other entities.  Note that the means by which these operations are carried out between members and the central authority is out of scope for this document.
 
 GMBC Post
 
-> When adding or removing members from a group, a member will submit a new GMBC block to the moderator representing that change.  The moderator will verify that the block is signed by a member of the group and that the hash attribute of the block represents the hash of the current tail end of the chain.  If both checks succeed then the moderator will make the new block a permanent part of the GMBC and indicate to the requesting entity that the update was successful.
+> When adding or removing members from a group, a member will submit a new GMBC block to the central authority representing that change.  The central authority will verify that the block is signed by a member of the group and that the hash attribute of the block represents the hash of the current tail end of the chain.  If both checks succeed then the central authority will make the new block a permanent part of the GMBC and indicate to the requesting entity that the update was successful.
 
 GMBC Get
 
-> Entities may request all or part of the current GMBC from the moderator by providing to the GMBC a hash of the last GMBC block of which they are aware (or 0x0 if they are requesting the entire chain).
+> Entities may request all or part of the current GMBC from the central authority by providing to the GMBC a hash of the last GMBC block of which they are aware (or 0x0 if they are requesting the entire chain).
 
 GMBC Notify (optional)
 
-> In some deployments it may be desirable for a moderator to immediately multicast GMBC updates to all current members of the group.  This may be based on either an explicit or automatic/implicit subscription model.
+> In some deployments it may be desirable for a central authority to immediately multicast GMBC updates to all current members of the group.  This may be based on either an explicit or automatic/implicit subscription model.
 
 GK Post
 
-> Entities may inform the moderator of new GKs which they have generated for the purpose of encrypting data they emit to the group communications resource.  The moderator will store a received GKs such that it may subsequently service requests for that GK from other members that wish to decrypt these communications.
+> Entities may inform the central authority of new GKs which they have generated for the purpose of encrypting data they emit to the group communications resource.  The central authority will store a received GKs such that it may subsequently service requests for that GK from other members that wish to decrypt these communications.
 
 GK Get
 
-> Members may request from the moderator GKs which have been generated by other entities.  In doing so, an entity must indicate the URI of the requested GK and the moderator must verify that the requesting entity was a member of the group at the time the GK was created by processing the GMBC from the genesis block up to and including the block whose hash is indicated in the metadata of the requested GK.  A successful confirmation of the requesting entity as a member of the group at that point in time will result in the moderator generating a new GK which is in every way identical to the requested GK except that the key material is re-encrypted using the public key of the requesting entity and the GK itself is signed using the moderator's own public entity key.
+> Members may request from the central authority GKs which have been generated by other entities.  In doing so, an entity must indicate the URI of the requested GK and the central authority must verify that the requesting entity was a member of the group at the time the GK was created by processing the GMBC from the genesis block up to and including the block whose hash is indicated in the metadata of the requested GK.  A successful confirmation of the requesting entity as a member of the group at that point in time will result in the central authority generating a new GK which is in every way identical to the requested GK except that the key material is re-encrypted using the public key of the requesting entity and the GK itself is signed using the central authority's own public entity key.
 
 # Security Considerations
 
