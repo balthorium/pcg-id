@@ -153,7 +153,7 @@ The payload of the GK is a JSON object includes attributes representing the foll
   * a URI that uniquely identifies the GK,
   * the acct URI of the creator of the GK,
   * a hash of the GMBC tail block at the time this key was created,
-  * an encrypted {{RFC7517}} that represents the symmetric key material, and
+  * an encrypted JWE {{RFC7517}} that contains the symmetric key material, and
   * a timestamp indicating the date and time the GK was created.
 
 The JWK attribute value is encrypted in a JWE {{RFC7516}} JSON serialization with one or more recipients.  In decentralized groups the resulting JWE JSON serialization must include each other member of the group as determined by the current and validated GMBC.  In centralized groups the resulting JWE JSON serialization may include as a recipient just the curator (e.g. when an entity shares a new GK) or just one member (e.g. when the curator shares a GK with a member that has requested it).  The full JSON payload of the GK is signed as a JWS {{RFC7515}} using the creator's private entity key.

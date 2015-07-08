@@ -350,8 +350,8 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
    o  a hash of the GMBC tail block at the time this key was created,
 
-   o  an encrypted [RFC7517] that represents the symmetric key material,
-      and
+   o  an encrypted JWE [RFC7517] that contains the symmetric key
+      material, and
 
    o  a timestamp indicating the date and time the GK was created.
 
