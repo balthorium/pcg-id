@@ -146,9 +146,9 @@ To protect against unauthorized tampering the GMBC is validated by verifying the
 
 ## Key Distribution by Group Keys
 
-A Group Key (GK) is signed object containing encrypted symmetric key material with associated metadata.  A GK exists for the purpose of sharing the contained symmetric key with other members of the group.  The exclusivity of access to the key material is achieved by encrypting the key material in such a way that it may be decrypted with the private entity key(s) of any one of the other group members.  The creating entity signs the GK such that the authenticity of the associated metadata may be verified by its recipients. 
+A Group Key (GK) is signed object containing encrypted symmetric key material with associated metadata.  A GK exists for the purpose of sharing the contained symmetric key with other members of the group.  The exclusivity of access to the key material is achieved by encrypting the key material in such a way that it may be decrypted with the private entity key(s) of any one of the other group members.  The creator signs the GK such that the authenticity of the associated metadata may be verified by its recipients. 
 
-More specifically, the payload of the GK is a JSON object including attributes representing the following:
+The payload of the GK is a JSON object includes attributes representing the following:
 
   * a URI that uniquely identifies the GK,
   * the acct URI of the creator of the GK,
@@ -156,7 +156,7 @@ More specifically, the payload of the GK is a JSON object including attributes r
   * an encrypted {{RFC7517}} that represents the symmetric key material, and
   * a timestamp indicating the date and time the GK was created.
 
-The JWK attribute value is encrypted in a JWE {{RFC7516}} JSON serialization with one or more recipients.  In decentralized groups the resulting JSON serialization must include each other member of the group as determined by the current and validated GMBC.  In centralized groups the resulting JSON serialization may include as a recipient just the curator (e.g. when an entity shares a new GK) or just one member (e.g. when the curator shares a GK with a member that has requested it).  The full JSON payload of the GK is signed as a JWS {{RFC7515}} using the creator's private entity key.
+The JWK attribute value is encrypted in a JWE {{RFC7516}} JSON serialization with one or more recipients.  In decentralized groups the resulting JWE JSON serialization must include each other member of the group as determined by the current and validated GMBC.  In centralized groups the resulting JWE JSON serialization may include as a recipient just the curator (e.g. when an entity shares a new GK) or just one member (e.g. when the curator shares a GK with a member that has requested it).  The full JSON payload of the GK is signed as a JWS {{RFC7515}} using the creator's private entity key.
 
 GKs may be created by members and non-members alike.  A non-member may generate a GK as described above and use it to encrypt its own communications to the group.  This can be a useful property as it provides for a confidential "write only" capability to the group communications resource.  
 
@@ -172,7 +172,11 @@ While this specification provides definition for constructs that enable confiden
 
 ## Decentralized Groups
 
-A decentralized group is characterized by the absence of a curator attribute in the GMBC genesis block and therefore the absence of a permanent member within the group through which GMBC and GK objects may be exchanged.  In a decentralized group these objects may instead be exchanged either in-band through the group communications resource itself, or through in-band references to external repositories within which GMBC and GK objects are stored.  Both the GMBC and GK objects are designed to be hardened against tampering and protect sensitive data such that they may be reasonably exchanged through either public or private transports and stores.
+A decentralized group is characterized by the absence of a curator attribute in the GMBC genesis block and therefore the absence of a permanent member within the group through which GMBC and GK objects may be exchanged.  In a decentralized group these objects may instead be exchanged either in-band through the group communications resource itself, or through in-band references to external repositories from whence GMBC and GK objects may be retrieved.  
+
+Both the GMBC and GK objects are designed to be hardened against tampering and protect sensitive data such that they may be reasonably exchanged through either public or private transports and stores.  Note, however, that regardless of the employed mechanisms of exchange a protocol utilizing a decentralized group pattern must provide a means by which any GMBC update or new GK produced by a member may be delivered to each other group member in a timely fashion.
+
+Even in a context of very low latency communications the fact that there is no single entity providing an authoritative and definitively current version of the GMBC means that members can make concurrent updates to their own copies of the GMBC and thereby create conflicts in their collective understanding of group membership history.  Such conflicts are manifest as a divergence where each GMBC has a different block, let us call them B and B', appended to some block A that they have in common.  A member encountering this condition must select either one of the two GMBCs in its entirety and discard the other.  This selection is performed by observing the hash values of B and B' and selecting the GMBC to which the block with the numerically smallest hash belongs.  If, as a result of this selection, an entity finds that a block that it had itself previously introduced to the discarded GMBC is not represented in the retained GMBC, that entity is responsible for appending a new block to the retained GMBC to represent that membership update and, of course, share that update to other members. 
 
 ## Centralized Groups
 
@@ -258,14 +262,14 @@ The payload of a standard GMBC block is defined as follows, using JSON content r
 
 ~~~
 operation "Operation" {
-    "entity": uri,                ; acct URI of the entity added/removed
-    "optype": < "add" "remove" >  ; tag indicating the type of operation
+    "entity": uri,                ; acct URI of entity added/removed
+    "optype": < "add" "remove" >  ; tag indicating type of operation
 }
 
 gmbc-block {
-    "creator": uri,               ; acct URI of the creator of the block
-    "created": date-time,         ; the date and time of block creation
-    "antecedent": string,         ; SHA-256 hash of the preceding block
+    "creator": uri,               ; acct URI of creator of the block
+    "created": date-time,         ; date and time of block creation
+    "antecedent": string,         ; SHA-256 hash of preceding block
     "operations" [ *: operation ] ; membership update operations
 }
 
@@ -303,7 +307,7 @@ group-key {
 root group-key
 ~~~
 
-The "key" attribute's value is a JWE JSON serialization as defined in {{RFC7516}} with one or more recipients (either one recipient for each member of the group at the time the key was created, or the group curator).  The payload of that JWE is a JWK {{RFC7517}} representing a symmetric key.
+The "key" attribute's value is a JWE JSON serialization as defined in {{RFC7516}} with one or more recipients (either one recipient for each member of the group at the time the key was created, or the group curator).  The payload of that JWE is a JWK {{RFC7517}} representing a symmetric key.  
 
 # Security Considerations
 

@@ -73,7 +73,7 @@ Table of Contents
      2.3.  Key Distribution by Group Keys  . . . . . . . . . . . . .   6
    3.  Group Models  . . . . . . . . . . . . . . . . . . . . . . . .   8
      3.1.  Decentralized Groups  . . . . . . . . . . . . . . . . . .   8
-     3.2.  Centralized Groups  . . . . . . . . . . . . . . . . . . .   8
+     3.2.  Centralized Groups  . . . . . . . . . . . . . . . . . . .   9
    4.  Use Cases . . . . . . . . . . . . . . . . . . . . . . . . . .  10
      4.1.  Decentralized Group File Sharing  . . . . . . . . . . . .  10
      4.2.  Centralized Group Instant Messaging . . . . . . . . . . .  11
@@ -81,11 +81,11 @@ Table of Contents
      5.1.  Entity  . . . . . . . . . . . . . . . . . . . . . . . . .  12
      5.2.  Group Membership Block Chain  . . . . . . . . . . . . . .  12
      5.3.  Group Key . . . . . . . . . . . . . . . . . . . . . . . .  13
-   6.  Security Considerations . . . . . . . . . . . . . . . . . . .  13
-   7.  Appendix A. Acknowledgments . . . . . . . . . . . . . . . . .  13
-   8.  Appendix B. Document History  . . . . . . . . . . . . . . . .  13
+   6.  Security Considerations . . . . . . . . . . . . . . . . . . .  14
+   7.  Appendix A. Acknowledgments . . . . . . . . . . . . . . . . .  14
+   8.  Appendix B. Document History  . . . . . . . . . . . . . . . .  14
    9.  Normative References  . . . . . . . . . . . . . . . . . . . .  14
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  14
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  15
 
 1.  Introduction
 
@@ -338,11 +338,11 @@ Biggs & Cooley           Expires January 4, 2016                [Page 6]
 Internet-Draprimitives-for-confidential-group-communications   July 2015
 
 
-   The creating entity signs the GK such that the authenticity of the
-   associated metadata may be verified by its recipients.
+   The creator signs the GK such that the authenticity of the associated
+   metadata may be verified by its recipients.
 
-   More specifically, the payload of the GK is a JSON object including
-   attributes representing the following:
+   The payload of the GK is a JSON object includes attributes
+   representing the following:
 
    o  a URI that uniquely identifies the GK,
 
@@ -357,13 +357,13 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
    The JWK attribute value is encrypted in a JWE [RFC7516] JSON
    serialization with one or more recipients.  In decentralized groups
-   the resulting JSON serialization must include each other member of
-   the group as determined by the current and validated GMBC.  In
-   centralized groups the resulting JSON serialization may include as a
-   recipient just the curator (e.g. when an entity shares a new GK) or
-   just one member (e.g. when the curator shares a GK with a member that
-   has requested it).  The full JSON payload of the GK is signed as a
-   JWS [RFC7515] using the creator's private entity key.
+   the resulting JWE JSON serialization must include each other member
+   of the group as determined by the current and validated GMBC.  In
+   centralized groups the resulting JWE JSON serialization may include
+   as a recipient just the curator (e.g. when an entity shares a new GK)
+   or just one member (e.g. when the curator shares a GK with a member
+   that has requested it).  The full JSON payload of the GK is signed as
+   a JWS [RFC7515] using the creator's private entity key.
 
    GKs may be created by members and non-members alike.  A non-member
    may generate a GK as described above and use it to encrypt its own
@@ -420,11 +420,42 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
    permanent member within the group through which GMBC and GK objects
    may be exchanged.  In a decentralized group these objects may instead
    be exchanged either in-band through the group communications resource
-   itself, or through in-band references to external repositories within
-   which GMBC and GK objects are stored.  Both the GMBC and GK objects
-   are designed to be hardened against tampering and protect sensitive
-   data such that they may be reasonably exchanged through either public
-   or private transports and stores.
+   itself, or through in-band references to external repositories from
+   whence GMBC and GK objects may be retrieved.
+
+   Both the GMBC and GK objects are designed to be hardened against
+   tampering and protect sensitive data such that they may be reasonably
+   exchanged through either public or private transports and stores.
+   Note, however, that regardless of the employed mechanisms of exchange
+   a protocol utilizing a decentralized group pattern must provide a
+   means by which any GMBC update or new GK produced by a member may be
+   delivered to each other group member in a timely fashion.
+
+   Even in a context of very low latency communications the fact that
+   there is no single entity providing an authoritative and definitively
+   current version of the GMBC means that members can make concurrent
+   updates to their own copies of the GMBC and thereby create conflicts
+   in their collective understanding of group membership history.  Such
+   conflicts are manifest as a divergence where each GMBC has a
+   different block, let us call them B and B', appended to some block A
+   that they have in common.  A member encountering this condition must
+   select either one of the two GMBCs in its entirety and discard the
+   other.  This selection is performed by observing the hash values of B
+   and B' and selecting the GMBC to which the block with the numerically
+
+
+
+Biggs & Cooley           Expires January 4, 2016                [Page 8]
+
+Internet-Draprimitives-for-confidential-group-communications   July 2015
+
+
+   smallest hash belongs.  If, as a result of this selection, an entity
+   finds that a block that it had itself previously introduced to the
+   discarded GMBC is not represented in the retained GMBC, that entity
+   is responsible for appending a new block to the retained GMBC to
+   represent that membership update and, of course, share that update to
+   other members.
 
 3.2.  Centralized Groups
 
@@ -442,14 +473,6 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
       When adding or removing members from a group, a member will submit
       a new GMBC block to the curator representing that change.  The
-
-
-
-Biggs & Cooley           Expires January 4, 2016                [Page 8]
-
-Internet-Draprimitives-for-confidential-group-communications   July 2015
-
-
       curator will verify that the block is signed by a member of the
       group and that the hash attribute of the block represents the hash
       of the current tail end of the chain.  If both checks succeed then
@@ -475,6 +498,14 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
       Entities may inform the curator of new GKs which they have
       generated for the purpose of encrypting data they emit to the
+
+
+
+Biggs & Cooley           Expires January 4, 2016                [Page 9]
+
+Internet-Draprimitives-for-confidential-group-communications   July 2015
+
+
       group communications resource.  The curator will store a received
       GKs such that it may subsequently service requests for that GK
       from other members that wish to decrypt these communications.
@@ -493,18 +524,6 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
       requested GK except that the key material is re-encrypted using
       the public key of the requesting entity and the GK itself is
       signed using the curator's own public entity key.
-
-
-
-
-
-
-
-
-Biggs & Cooley           Expires January 4, 2016                [Page 9]
-
-Internet-Draprimitives-for-confidential-group-communications   July 2015
-
 
 4.  Use Cases
 
@@ -535,6 +554,14 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
        multi-recipient JWE JSON serialization that indicates users B and
        C as recipients.
 
+
+
+
+Biggs & Cooley           Expires January 4, 2016               [Page 10]
+
+Internet-Draprimitives-for-confidential-group-communications   July 2015
+
+
    5.  User A posts the GMBC and GK as text files to the same file
        sharing service, and sends the URLs of the encrypted content
        file, the GMBC, and GK to users B and C.
@@ -552,15 +579,6 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
    8.  User C repeats the procedure outlined for user B in steps 6 and
        7.
-
-
-
-
-
-Biggs & Cooley           Expires January 4, 2016               [Page 10]
-
-Internet-Draprimitives-for-confidential-group-communications   July 2015
-
 
 4.2.  Centralized Group Instant Messaging
 
@@ -591,6 +609,15 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
    5.  User B recognizes user A's acct URI as the identity of a trusted
        correspondent and validates the GMBC as originating from user A
+
+
+
+
+Biggs & Cooley           Expires January 4, 2016               [Page 11]
+
+Internet-Draprimitives-for-confidential-group-communications   July 2015
+
+
        by discovering and retrieving user A's public entity key through
        [I-D.miller-saag-key-discovery].
 
@@ -607,16 +634,6 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
    8.  User C repeats the procedure outlined for user B in steps 4
        through 6.
-
-
-
-
-
-
-Biggs & Cooley           Expires January 4, 2016               [Page 11]
-
-Internet-Draprimitives-for-confidential-group-communications   July 2015
-
 
 5.  Primitive Specifications
 
@@ -641,19 +658,35 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
    The payload of a standard GMBC block is defined as follows, using
    JSON content rules notation [I-D.newton-json-content-rules].
 
-operation "Operation" {
-    "entity": uri,                ; acct URI of the entity added/removed
-    "optype": < "add" "remove" >  ; tag indicating the type of operation
-}
 
-gmbc-block {
-    "creator": uri,               ; acct URI of the creator of the block
-    "created": date-time,         ; the date and time of block creation
-    "antecedent": string,         ; SHA-256 hash of the preceding block
-    "operations" [ *: operation ] ; membership update operations
-}
 
-root gmbc-block
+
+
+
+
+
+
+
+
+
+Biggs & Cooley           Expires January 4, 2016               [Page 12]
+
+Internet-Draprimitives-for-confidential-group-communications   July 2015
+
+
+   operation "Operation" {
+       "entity": uri,                ; acct URI of entity added/removed
+       "optype": < "add" "remove" >  ; tag indicating type of operation
+   }
+
+   gmbc-block {
+       "creator": uri,               ; acct URI of creator of the block
+       "created": date-time,         ; date and time of block creation
+       "antecedent": string,         ; SHA-256 hash of preceding block
+       "operations" [ *: operation ] ; membership update operations
+   }
+
+   root gmbc-block
 
    A GMBC genesis block has the same specification as a standard block
    but with three additional payload fields, as defined below.
@@ -666,13 +699,6 @@ root gmbc-block
    }
 
    root gmbc-genesis-block
-
-
-
-Biggs & Cooley           Expires January 4, 2016               [Page 12]
-
-Internet-Draprimitives-for-confidential-group-communications   July 2015
-
 
 5.3.  Group Key
 
@@ -696,6 +722,14 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
    The "key" attribute's value is a JWE JSON serialization as defined in
    [RFC7516] with one or more recipients (either one recipient for each
+
+
+
+Biggs & Cooley           Expires January 4, 2016               [Page 13]
+
+Internet-Draprimitives-for-confidential-group-communications   July 2015
+
+
    member of the group at the time the key was created, or the group
    curator).  The payload of that JWE is a JWK [RFC7517] representing a
    symmetric key.
@@ -718,17 +752,6 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
    -00
 
    o  Initial draft.
-
-
-
-
-
-
-
-Biggs & Cooley           Expires January 4, 2016               [Page 13]
-
-Internet-Draprimitives-for-confidential-group-communications   July 2015
-
 
 9.  Normative References
 
@@ -756,6 +779,13 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
    [RFC7517]  Jones, M., "JSON Web Key (JWK)", RFC 7517, May 2015.
 
+
+
+Biggs & Cooley           Expires January 4, 2016               [Page 14]
+
+Internet-Draprimitives-for-confidential-group-communications   July 2015
+
+
    [RFC7518]  Jones, M., "JSON Web Algorithms (JWA)", RFC 7518, May
               2015.
 
@@ -781,4 +811,30 @@ Authors' Addresses
 
 
 
-Biggs & Cooley           Expires January 4, 2016               [Page 14]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Biggs & Cooley           Expires January 4, 2016               [Page 15]
