@@ -69,16 +69,22 @@ Table of Contents
      1.1.  Terminology . . . . . . . . . . . . . . . . . . . . . . .   3
      1.2.  Notational Conventions  . . . . . . . . . . . . . . . . .   4
    2.  Overview  . . . . . . . . . . . . . . . . . . . . . . . . . .   4
-     2.1.  Authentication by Public Key Discovery  . . . . . . . . .   4
+     2.1.  Authentication by Public Key Discovery  . . . . . . . . .   5
      2.2.  Authorization by Group Membership Block Chain . . . . . .   5
      2.3.  Key Distribution by Group Keys  . . . . . . . . . . . . .   6
-   3.  Group Models  . . . . . . . . . . . . . . . . . . . . . . . .   7
+   3.  Group Models  . . . . . . . . . . . . . . . . . . . . . . . .   8
      3.1.  Unmoderated Groups  . . . . . . . . . . . . . . . . . . .   8
      3.2.  Moderated Groups  . . . . . . . . . . . . . . . . . . . .   8
-   4.  Security Considerations . . . . . . . . . . . . . . . . . . .   9
-   5.  Appendix A. Document History  . . . . . . . . . . . . . . . .   9
-   6.  Normative References  . . . . . . . . . . . . . . . . . . . .   9
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  10
+   4.  Use Cases . . . . . . . . . . . . . . . . . . . . . . . . . .   9
+     4.1.  Unmoderated Group File Sharing  . . . . . . . . . . . . .  10
+     4.2.  Moderated Group Instant Messaging . . . . . . . . . . . .  10
+   5.  Functional Specifications . . . . . . . . . . . . . . . . . .  11
+     5.1.  Group Membership Chain Blocks . . . . . . . . . . . . . .  11
+     5.2.  Group Keys  . . . . . . . . . . . . . . . . . . . . . . .  11
+   6.  Security Considerations . . . . . . . . . . . . . . . . . . .  12
+   7.  Appendix A. Document History  . . . . . . . . . . . . . . . .  12
+   8.  Normative References  . . . . . . . . . . . . . . . . . . . .  12
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  12
 
 1.  Introduction
 
@@ -99,12 +105,6 @@ Table of Contents
    service [I-D.miller-saag-key-discovery] available from a well-known
    URL.
 
-   Authorization is based on the group membership classification of
-   authenticated entities, as represented in the form of a Group
-   Membership Block Chain (GMBC) structure defined by this
-   specification.  Critical properties of the GMBC are tamper-
-   resistance, efficient mutability, broad deployability, and integrity
-   in the context of distributed handling.
 
 
 
@@ -113,6 +113,13 @@ Biggs & Cooley           Expires January 4, 2016                [Page 2]
 
 Internet-Draprimitives-for-confidential-group-communications   July 2015
 
+
+   Authorization is based on the group membership classification of
+   authenticated entities, as represented in the form of a Group
+   Membership Block Chain (GMBC) structure defined by this
+   specification.  Critical properties of the GMBC are tamper-
+   resistance, efficient mutability, broad deployability, and integrity
+   in the context of distributed handling.
 
    The secure exchange of keys is based on existing key wrapping
    standards which allow for the sharing of encrypted key material with
@@ -155,13 +162,6 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
    genesis block
 
-      The first block in a group membership block chain.
-
-   group
-
-      A group is a set of entities whose membership wish to engage in
-      secure and authenticated multiparty communications over some group
-      communications resource.
 
 
 
@@ -169,6 +169,14 @@ Biggs & Cooley           Expires January 4, 2016                [Page 3]
 
 Internet-Draprimitives-for-confidential-group-communications   July 2015
 
+
+      The first block in a group membership block chain.
+
+   group
+
+      A group is a set of entities whose membership wish to engage in
+      secure and authenticated multiparty communications over some group
+      communications resource.
 
    group communications resource
 
@@ -207,15 +215,7 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
    for enabling authentication, authorization, and secure key exchange
    in confidential group communications.
 
-2.1.  Authentication by Public Key Discovery
 
-   In the context of this specification, entity authentication is
-   defined as the demonstration of possession of the private component
-   of an asymmetric key pair.  Specifically, an entity uniquely
-   identified by an acct URI [RFC7565] may be authenticated by
-   demonstrating possession of the private counterpart of one or more
-   public keys as may be discovered using that acct URI and the
-   mechanisms described in [I-D.miller-saag-key-discovery].
 
 
 
@@ -225,6 +225,16 @@ Biggs & Cooley           Expires January 4, 2016                [Page 4]
 
 Internet-Draprimitives-for-confidential-group-communications   July 2015
 
+
+2.1.  Authentication by Public Key Discovery
+
+   In the context of this specification, entity authentication is
+   defined as the demonstration of possession of the private component
+   of an asymmetric key pair.  Specifically, an entity uniquely
+   identified by an acct URI [RFC7565] may be authenticated by
+   demonstrating possession of the private counterpart of one or more
+   public keys as may be discovered using that acct URI and the
+   mechanisms described in [I-D.miller-saag-key-discovery].
 
 2.2.  Authorization by Group Membership Block Chain
 
@@ -263,6 +273,15 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
    o  a tag indicating the operation type ("add" or "remove"), and
 
+
+
+
+
+Biggs & Cooley           Expires January 4, 2016                [Page 5]
+
+Internet-Draprimitives-for-confidential-group-communications   July 2015
+
+
    o  the acct URI of the entity being either added to or removed from
       the group.
 
@@ -274,13 +293,6 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
    o  the acct URI [RFC7565] of the group moderator (optional), and
 
    o  a nonce.
-
-
-
-Biggs & Cooley           Expires January 4, 2016                [Page 5]
-
-Internet-Draprimitives-for-confidential-group-communications   July 2015
-
 
    The genesis block must also include at least one "add" operation,
    though it need not necessarily represent the addition of the entity
@@ -319,6 +331,13 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
    More specifically, the payload of the GK is a JSON object including
    attributes representing the following:
 
+
+
+Biggs & Cooley           Expires January 4, 2016                [Page 6]
+
+Internet-Draprimitives-for-confidential-group-communications   July 2015
+
+
    o  a URI that uniquely identifies the GK,
 
    o  the acct URI [RFC7565] of the creator of the GK,
@@ -330,13 +349,6 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
    o  a timestamp indicating a time beyond which the key should not be
       used for encryption.
-
-
-
-Biggs & Cooley           Expires January 4, 2016                [Page 6]
-
-Internet-Draprimitives-for-confidential-group-communications   July 2015
-
 
    The JWK attribute value is encrypted in a JWE [RFC7516] JSON
    serialization with one or more recipients.  In unmoderated groups the
@@ -354,11 +366,13 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
    provides for a confidential "write only" capability to the group
    communications resource.
 
-   A group may have any number of GKs associated with it.  Each member
-   of a group must use its own GK for purposes of encryption and shares
-   this GK with the remainder of the group for purposes of decryption.
-   A member should not re-use a GK provided by another entity as that
-   other entity may not necessarily be a member.
+   A group may have any number of GKs associated with it.  Where
+   practical, it is recommended that each member of a group use its own
+   GK for purposes of encryption and share this GK with the remainder of
+   the group for purposes of decryption.  A member must not re-use the
+   keying material of a GK created by another entity to encrypt it's own
+   communications unless it has verified that GK is signed by a current
+   member of the group as defined by the GMBC.
 
    Upon receiving and validating an update to the GMBC that includes
    "remove" operations, each entity must discard their encryption GK and
@@ -370,6 +384,15 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
    communications.  In moderated groups the moderator may implement a
    policy where it permits new group members to request previously
    created GKs.
+
+
+
+
+
+Biggs & Cooley           Expires January 4, 2016                [Page 7]
+
+Internet-Draprimitives-for-confidential-group-communications   July 2015
+
 
    It is recommended that all entities that share encrypted content over
    the group communications resource rotate their GKs regularly so as to
@@ -386,13 +409,6 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
    confidential group communications and how the primitives defined by
    this specification may be leveraged in each.  These classes may be
    described as "moderated groups" and "unmoderated groups".
-
-
-
-Biggs & Cooley           Expires January 4, 2016                [Page 7]
-
-Internet-Draprimitives-for-confidential-group-communications   July 2015
-
 
 3.1.  Unmoderated Groups
 
@@ -426,6 +442,14 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
       moderator will verify that the block is signed by a member of the
       group and that the hash attribute of the block represents the hash
       of the current tail end of the chain.  If both checks succeed then
+
+
+
+Biggs & Cooley           Expires January 4, 2016                [Page 8]
+
+Internet-Draprimitives-for-confidential-group-communications   July 2015
+
+
       the moderator will make the new block a permanent part of the GMBC
       and indicate to the requesting entity that the update was
       successful.
@@ -441,15 +465,6 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
       In some deployments it may be desirable for a moderator to
       immediately multicast GMBC updates to all current members of the
-
-
-
-
-Biggs & Cooley           Expires January 4, 2016                [Page 8]
-
-Internet-Draprimitives-for-confidential-group-communications   July 2015
-
-
       group.  This may be based on either an explicit or automatic/
       implicit subscription model.
 
@@ -477,26 +492,11 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
       using the public key of the requesting entity and the GK itself is
       signed using the moderator's own public entity key.
 
-4.  Security Considerations
+4.  Use Cases
 
-   Security considerations are discussed throughout this document.
-   Additional considerations may be added here as needed.
-
-5.  Appendix A.  Document History
-
-   -00
-
-   o  Initial draft.
-
-6.  Normative References
-
-   [I-D.miller-saag-key-discovery]
-              Miller, M. and S. Nandakumar, "Key Discovery Service",
-              draft-miller-saag-key-discovery-00 (work in progress),
-              July 2015.
-
-   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119, March 1997.
+   The following are non-normative examples of how the primitives
+   described in this specification may be employed to facilitate
+   confidential group communications.
 
 
 
@@ -505,6 +505,139 @@ Biggs & Cooley           Expires January 4, 2016                [Page 9]
 
 Internet-Draprimitives-for-confidential-group-communications   July 2015
 
+
+4.1.  Unmoderated Group File Sharing
+
+   This use case describes an application that utilizes some third party
+   file sharing service to store confidential information and employs
+   this specification as part of a scheme to secure that confidentiality
+   among the members of self defined group.
+
+   1.  User A generates a symmetric key to be used for file encryption.
+
+   2.  User A encrypts a file using the symmetric key and posts it to
+       the file sharing service.
+
+   3.  User A generates a new GMBC by creating a genesis block.  In that
+       block user A includes a reference to the URL of the encrypted
+       file on the file sharing service.  User A also adds to the
+       genesis block three group membership "add" operations: one for
+       itself, one for user B, and one for user C.
+
+   4.  User A creates a GK that includes a hash of the GMBC genesis
+       block, and encrypts the key material portion of the GK using a
+       multi-recipient JWE JSON serialization that indicates users B and
+       C as recipients.
+
+   5.  User A posts the GMBC and GK as text files to the same file
+       sharing service, and sends the URLs of the encrypted content
+       file, the GMBC, and GK to users B and C.
+
+   6.  User B recognizes user A's acct URI as the identity of a trusted
+       correspondent, retrieves the GMBC and GK from the file service,
+       and verifies the signatures on the GMBC genesis block and GK by
+       discovering and retrieving user A's public entity key through
+       [I-D.miller-saag-key-discovery].
+
+   7.  User B uses its own private entity key to decrypt the key
+       material contained within the GK, downloads the file indicated by
+       the resource URL in the GMBC genesis block, and decrypts the
+       contents of that file.
+
+   8.  User C repeats the procedure outlined for user B in steps 6 and
+       7.
+
+4.2.  Moderated Group Instant Messaging
+
+   This use case describes an application that utilizes some instant
+   messaging service to exchange confidential messages among a group of
+   users and employs this specification as part of a scheme to secure
+   that confidentiality among the members as a moderated group.
+
+
+
+
+Biggs & Cooley           Expires January 4, 2016               [Page 10]
+
+Internet-Draprimitives-for-confidential-group-communications   July 2015
+
+
+   1.  User A establishes a messaging thread on the messaging service
+       that includes users B and C.  We presume it can be associated
+       with some unique URI for purposes of identification.
+
+   2.  User A generates a new GMBC by creating a genesis block.  In that
+       block user A includes a reference to the URI of the messaging
+       thread created in step 2, and three group membership "add"
+       operations: one for itself, one for user B, and one for user C.
+       User A also identifies itself as the moderator of the group by
+       provisioning the genesis block with its own acct URI in the
+       moderator field.
+
+   3.  User A creates a GK that includes a hash of the GMBC genesis
+       block.
+
+   4.  User A encrypts a message using the keying material of the GK and
+       sends it over the instant messaging service.  As metadata within
+       that message it also includes the URI of the GK it used to
+       encrypt the message and the current GMBC.
+
+   5.  User B recognizes user A's acct URI as the identity of a trusted
+       correspondent and validates the GMBC as originating from user A
+       by discovering and retrieving user A's public entity key through
+       [I-D.miller-saag-key-discovery].
+
+   6.  User B observes that the GMBC indicates user A as the moderator
+       for this group and sends a request (perhaps as an in-band
+       extension to the instant messaging protocol) to user A for the GK
+       used to encrypt the message sent in step 3.
+
+   7.  User A receives the GK request from user B, validates that user B
+       was a member of the GMBC at the time the requested GK was
+       created, and returns a copy of the GK created in step 3 with the
+       keying material portion encrypted using the public entity key of
+       user B.
+
+   8.  User C repeats the procedure outlined for user B in steps 4
+       through 6.
+
+5.  Functional Specifications
+
+5.1.  Group Membership Chain Blocks
+
+5.2.  Group Keys
+
+
+
+
+
+
+
+Biggs & Cooley           Expires January 4, 2016               [Page 11]
+
+Internet-Draprimitives-for-confidential-group-communications   July 2015
+
+
+6.  Security Considerations
+
+   Security considerations are discussed throughout this document.
+   Additional considerations may be added here as needed.
+
+7.  Appendix A.  Document History
+
+   -00
+
+   o  Initial draft.
+
+8.  Normative References
+
+   [I-D.miller-saag-key-discovery]
+              Miller, M. and S. Nandakumar, "Key Discovery Service",
+              draft-miller-saag-key-discovery-00 (work in progress),
+              July 2015.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119, March 1997.
 
    [RFC4949]  Shirey, R., "Internet Security Glossary, Version 2", RFC
               4949, August 2007.
@@ -529,6 +662,16 @@ Authors' Addresses
    Cisco Systems
 
    Email: adb@cisco.com
+
+
+
+
+
+
+
+Biggs & Cooley           Expires January 4, 2016               [Page 12]
+
+Internet-Draprimitives-for-confidential-group-communications   July 2015
 
 
    Shaun Cooley
@@ -557,4 +700,29 @@ Authors' Addresses
 
 
 
-Biggs & Cooley           Expires January 4, 2016               [Page 10]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Biggs & Cooley           Expires January 4, 2016               [Page 13]
