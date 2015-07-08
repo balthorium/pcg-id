@@ -43,13 +43,13 @@ informative:
   
 --- abstract
 
-This specification defines generalized primitives for use in establishing end-to-end confidentiality in multiparty communications.  These primitives address three essential elements of secure group communications: authentication, group membership, and secure key exchange.  A core objective of this specification is to define these primitives as common constructs for private group communications and in a manner that allows for flexibility in how they are integrated and deployed as part of new and existing group communications applications. 
+This specification defines generalized primitives for use in establishing end-to-end confidentiality in multiparty communications.  These primitives address three essential elements of group privacy: authentication, group membership, and secure key exchange.  A core objective of this specification is to define these primitives as common constructs for private group communications and in a manner that allows for flexibility in how they are integrated and deployed as part of new and existing group communications applications. 
 
 --- middle
 
 # Introduction
 
-This specification defines application agnostic primitives for use in establishing authorization and end-to-end confidentiality in multiparty communications.  These primitives address three essential elements of secure group communications:
+This specification defines generalized primitives for use in establishing end-to-end confidentiality in multiparty communications.  These primitives address three essential elements of group privacy: 
 
  * Authentication
  * Group Membership
@@ -91,7 +91,7 @@ group communications resource
 
 group key (GK)
 
-> A group key is an encrypted object containing symmetric key material and associated metadata secured by the public key(s) of other group members.
+> A group key is a signed and encrypted object containing symmetric key material and associated metadata secured by the public key(s) of group members.
 
 group membership block chain (GMBC)
 
@@ -112,17 +112,17 @@ This section provides a general overview of three basic constructs for enabling 
 
 ## Authentication by Public Key Discovery
 
-In the context of this specification, entity authentication is defined as the demonstration of possession of the private component of an asymmetric key pair.  Specifically, an entity uniquely identified by an acct URI {{RFC7565}} may be authenticated by demonstrating possession of the private counterpart of one or more public keys as may be discovered using that acct URI and the mechanisms described in {{I-D.miller-saag-key-discovery}}.  
+In the context of this specification entity authentication is defined as the demonstration of possession of the private component of an asymmetric key pair.  Specifically, an entity uniquely identified by an acct URI {{RFC7565}} may be authenticated by demonstrating possession of the private counterpart of one or more public keys as may be discovered using that acct URI and the mechanisms described in {{I-D.miller-saag-key-discovery}}.  
 
 ## Authorization by Group Membership Block Chain
 
-In the context of this specification, authorization is defined as the classification of any given entity as either a "member" or "non-member" with respect to a group.  A member of the group is by definition authorized to receive keying material used to encrypt group communications, and likewise a non-member is not.  A member is also entitled to alter the membership of the group.  The means by which group membership classification established, updated, and validated is through operations on a Group Membership Block Chain (GMBC).  
+In the context of this specification authorization is defined as the classification of any given entity as either a "member" or "non-member" with respect to a group.  A member of the group is by definition authorized to receive keying material used to encrypt group communications, and likewise a non-member is not.  A member is also entitled to alter the membership of the group.  The means by which group membership classification established, updated, and validated, is through operations on a Group Membership Block Chain (GMBC).  
 
 A GMBC is an ordered list of data blocks representing a tamper-resistant chronological account of group membership updates.  The first block in the GMBC defines the initial set of group members and each subsequent block represents an addition/removal of one or more other entities to/from the group.  Any entity can create a GMBC, but only members can update it by appending new blocks.
 
-Each block consists of a JSON object signed (as a JWS {{RFC7515}}) with the private key of the entity that created that block within the chain.  That JSON object includes attributes representing the following:
+Each block consists of a JSON object signed with the private key of the entity that created that block within the chain.  That JSON object includes attributes representing the following:
 
-  * the acct URI {{RFC7565}} of the entity that created the block,
+  * the acct URI of the entity that created the block,
   * an array of group membership update operations, 
   * a timestamp indicating the date and time of the block's creation, and
   * a hash of the preceding block in the membership chain (if any).
@@ -135,14 +135,14 @@ A group membership update operation is a JSON object with two fields:
 In addition to the above attributes the first block of the chain, or genesis block, also includes the following attributes:
 
   * a URI that uniquely identifies the group communications resource, 
-  * the acct URI {{RFC7565}} of the group's curator (optional), and
+  * the acct URI of the group's curator (optional), and
   * a nonce.
 
 The genesis block must also include at least one "add" operation, though it need not necessarily represent the addition of the entity that created it (i.e. entities may create new groups within which they are not themselves members).
 
 The membership of the group is implicit and may be determined by processing the GMBC in chronological order.  At any given point in time the membership of the group is defined as that set of entities for which there exists, for each entity, a previously introduced block containing an "add" operation for which there does not exist a subsequent but also previously introduced block containing a "remove" operation.
 
-To protect against unauthorized tampering the GMBC is validated by verifying the signatures of each block, verifying that each non-genesis block contains a valid hash of the preceding block, and verifying that each block is created by an entity that is among the group's membership as determined by the segment of chain preceding that block.  Block signature verification is made possible through the key discovery mechanisms defined in {{I-D.miller-saag-key-discovery}} and the knowledge of each member's acct URI {{RFC7565}}.
+To protect against unauthorized tampering the GMBC is validated by verifying the signatures of each block, verifying that each non-genesis block contains a valid hash of the preceding block, and verifying that each block is created by an entity that is among the group's membership as determined by the segment of chain preceding that block.  Block signature verification is made possible through the key discovery mechanisms defined in {{I-D.miller-saag-key-discovery}} and the knowledge of each member's acct URI.
 
 ## Key Distribution by Group Keys
 
@@ -151,7 +151,7 @@ A Group Key (GK) is signed object containing encrypted symmetric key material wi
 More specifically, the payload of the GK is a JSON object including attributes representing the following:
 
   * a URI that uniquely identifies the GK,
-  * the acct URI {{RFC7565}} of the creator of the GK,
+  * the acct URI of the creator of the GK,
   * a hash of the GMBC tail block at the time this key was created,
   * an encrypted {{RFC7517}} that represents the symmetric key material, and
   * a timestamp indicating the date and time the GK was created.
@@ -176,7 +176,7 @@ A decentralized group is characterized by the absence of a curator attribute in 
 
 ## Centralized Groups
 
-A centralized group is characterized by the presence of a curator attribute in the GMBC genesis block.  The curator attribute identifies an entity by its acct URI {{RFC7565}} and declares that entity as a permanent member of the group which will serve as a facilitator for the exchange of GMBC and GK objects among all group members.  In particular, a curator will respond to the following types of requests from other entities.  Note that the means by which these operations are carried out between members and the curator is out of scope for this document.
+A centralized group is characterized by the presence of a curator attribute in the GMBC genesis block.  The curator attribute identifies an entity by its acct URI and declares that entity as a permanent member of the group which will serve as a facilitator for the exchange of GMBC and GK objects among all group members.  In particular, a curator will respond to the following types of requests from other entities.  Note that the means by which these operations are carried out between members and the curator is out of scope for this document.
 
 GMBC Post
 
@@ -265,7 +265,7 @@ operation "Operation" {
 gmbc-block {
     "creator": uri,               ; acct URI of the creator of the block
     "created": date-time,         ; the date and time of block creation
-    "antecedent": string,         ; SHA-256 hash of the preceeding block
+    "antecedent": string,         ; SHA-256 hash of the preceding block
     "operations" [ *: operation ] ; membership update operations
 }
 
@@ -277,9 +277,9 @@ A GMBC genesis block has the same specification as a standard block but with thr
 ~~~
 gmbc-genesis-block {
     "resource": uri,              ; URI of the group comms. resource
-    "curator": ?uri,              ; (optional) acct URI of the curator
+    "curator": ?uri,              ; (optional) acct URI of curator
     "nonce": integer,             ; a random one-time numeric value
-    gmbc-block                    ; include standard block attributes
+    gmbc-block                    ; standard block attributes
 }
 
 root gmbc-genesis-block
@@ -294,9 +294,9 @@ The payload of a GK is defined as follows.
 ~~~
 group-key {
     "uri": uri,                   ; URI to identify the GK itself
-    "creator": uri,               ; acct URI of the creator of the GK
+    "creator": uri,               ; acct URI of creator of the GK
     "created": date-time,         ; the date and time of GK creation
-    "block": string,              ; SHA-256 hash of assoc. GMBC block
+    "block": string,              ; SHA-256 hash of GMBC block
     "key": wrapped-key            ; encrypted symmetric key material
 }
 

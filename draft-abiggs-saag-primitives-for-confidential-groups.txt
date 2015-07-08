@@ -15,13 +15,12 @@ Abstract
 
    This specification defines generalized primitives for use in
    establishing end-to-end confidentiality in multiparty communications.
-   These primitives address three essential elements of secure group
-   communications: authentication, group membership, and secure key
-   exchange.  A core objective of this specification is to define these
-   primitives as common constructs for private group communications and
-   in a manner that allows for flexibility in how they are integrated
-   and deployed as part of new and existing group communications
-   applications.
+   These primitives address three essential elements of group privacy:
+   authentication, group membership, and secure key exchange.  A core
+   objective of this specification is to define these primitives as
+   common constructs for private group communications and in a manner
+   that allows for flexibility in how they are integrated and deployed
+   as part of new and existing group communications applications.
 
 Status of This Memo
 
@@ -50,6 +49,7 @@ Copyright Notice
    (http://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
 
 
 
@@ -58,7 +58,6 @@ Biggs & Cooley           Expires January 4, 2016                [Page 1]
 Internet-Draprimitives-for-confidential-group-communications   July 2015
 
 
-   to this document.  Code Components extracted from this document must
    include Simplified BSD License text as described in Section 4.e of
    the Trust Legal Provisions and are provided without warranty as
    described in the Simplified BSD License.
@@ -90,10 +89,9 @@ Table of Contents
 
 1.  Introduction
 
-   This specification defines application agnostic primitives for use in
-   establishing authorization and end-to-end confidentiality in
-   multiparty communications.  These primitives address three essential
-   elements of secure group communications:
+   This specification defines generalized primitives for use in
+   establishing end-to-end confidentiality in multiparty communications.
+   These primitives address three essential elements of group privacy:
 
    o  Authentication
 
@@ -106,6 +104,8 @@ Table of Contents
    counterpart of a public key discoverable through a key discovery
    service [I-D.miller-saag-key-discovery] available from a well-known
    URL.
+
+
 
 
 
@@ -193,9 +193,9 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
    group key (GK)
 
-      A group key is an encrypted object containing symmetric key
-      material and associated metadata secured by the public key(s) of
-      other group members.
+      A group key is a signed and encrypted object containing symmetric
+      key material and associated metadata secured by the public key(s)
+      of group members.
 
    group membership block chain (GMBC)
 
@@ -234,24 +234,24 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
 2.1.  Authentication by Public Key Discovery
 
-   In the context of this specification, entity authentication is
-   defined as the demonstration of possession of the private component
-   of an asymmetric key pair.  Specifically, an entity uniquely
-   identified by an acct URI [RFC7565] may be authenticated by
-   demonstrating possession of the private counterpart of one or more
-   public keys as may be discovered using that acct URI and the
-   mechanisms described in [I-D.miller-saag-key-discovery].
+   In the context of this specification entity authentication is defined
+   as the demonstration of possession of the private component of an
+   asymmetric key pair.  Specifically, an entity uniquely identified by
+   an acct URI [RFC7565] may be authenticated by demonstrating
+   possession of the private counterpart of one or more public keys as
+   may be discovered using that acct URI and the mechanisms described in
+   [I-D.miller-saag-key-discovery].
 
 2.2.  Authorization by Group Membership Block Chain
 
-   In the context of this specification, authorization is defined as the
+   In the context of this specification authorization is defined as the
    classification of any given entity as either a "member" or "non-
    member" with respect to a group.  A member of the group is by
    definition authorized to receive keying material used to encrypt
    group communications, and likewise a non-member is not.  A member is
    also entitled to alter the membership of the group.  The means by
    which group membership classification established, updated, and
-   validated is through operations on a Group Membership Block Chain
+   validated, is through operations on a Group Membership Block Chain
    (GMBC).
 
    A GMBC is an ordered list of data blocks representing a tamper-
@@ -261,12 +261,11 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
    other entities to/from the group.  Any entity can create a GMBC, but
    only members can update it by appending new blocks.
 
-   Each block consists of a JSON object signed (as a JWS [RFC7515]) with
-   the private key of the entity that created that block within the
-   chain.  That JSON object includes attributes representing the
-   following:
+   Each block consists of a JSON object signed with the private key of
+   the entity that created that block within the chain.  That JSON
+   object includes attributes representing the following:
 
-   o  the acct URI [RFC7565] of the entity that created the block,
+   o  the acct URI of the entity that created the block,
 
    o  an array of group membership update operations,
 
@@ -274,6 +273,7 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
       and
 
    o  a hash of the preceding block in the membership chain (if any).
+
 
 
 
@@ -294,7 +294,7 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
    o  a URI that uniquely identifies the group communications resource,
 
-   o  the acct URI [RFC7565] of the group's curator (optional), and
+   o  the acct URI of the group's curator (optional), and
 
    o  a nonce.
 
@@ -319,7 +319,7 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
    that block.  Block signature verification is made possible through
    the key discovery mechanisms defined in
    [I-D.miller-saag-key-discovery] and the knowledge of each member's
-   acct URI [RFC7565].
+   acct URI.
 
 2.3.  Key Distribution by Group Keys
 
@@ -346,7 +346,7 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
    o  a URI that uniquely identifies the GK,
 
-   o  the acct URI [RFC7565] of the creator of the GK,
+   o  the acct URI of the creator of the GK,
 
    o  a hash of the GMBC tail block at the time this key was created,
 
@@ -430,13 +430,13 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
    A centralized group is characterized by the presence of a curator
    attribute in the GMBC genesis block.  The curator attribute
-   identifies an entity by its acct URI [RFC7565] and declares that
-   entity as a permanent member of the group which will serve as a
-   facilitator for the exchange of GMBC and GK objects among all group
-   members.  In particular, a curator will respond to the following
-   types of requests from other entities.  Note that the means by which
-   these operations are carried out between members and the curator is
-   out of scope for this document.
+   identifies an entity by its acct URI and declares that entity as a
+   permanent member of the group which will serve as a facilitator for
+   the exchange of GMBC and GK objects among all group members.  In
+   particular, a curator will respond to the following types of requests
+   from other entities.  Note that the means by which these operations
+   are carried out between members and the curator is out of scope for
+   this document.
 
    GMBC Post
 
@@ -649,7 +649,7 @@ operation "Operation" {
 gmbc-block {
     "creator": uri,               ; acct URI of the creator of the block
     "created": date-time,         ; the date and time of block creation
-    "antecedent": string,         ; SHA-256 hash of the preceeding block
+    "antecedent": string,         ; SHA-256 hash of the preceding block
     "operations" [ *: operation ] ; membership update operations
 }
 
@@ -658,14 +658,14 @@ root gmbc-block
    A GMBC genesis block has the same specification as a standard block
    but with three additional payload fields, as defined below.
 
-  gmbc-genesis-block {
-      "resource": uri,              ; URI of the group comms. resource
-      "curator": ?uri,              ; (optional) acct URI of the curator
-      "nonce": integer,             ; a random one-time numeric value
-      gmbc-block                    ; include standard block attributes
-  }
+   gmbc-genesis-block {
+       "resource": uri,              ; URI of the group comms. resource
+       "curator": ?uri,              ; (optional) acct URI of curator
+       "nonce": integer,             ; a random one-time numeric value
+       gmbc-block                    ; standard block attributes
+   }
 
-  root gmbc-genesis-block
+   root gmbc-genesis-block
 
 
 
@@ -686,9 +686,9 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
    group-key {
        "uri": uri,                   ; URI to identify the GK itself
-       "creator": uri,               ; acct URI of the creator of the GK
+       "creator": uri,               ; acct URI of creator of the GK
        "created": date-time,         ; the date and time of GK creation
-       "block": string,              ; SHA-256 hash of assoc. GMBC block
+       "block": string,              ; SHA-256 hash of GMBC block
        "key": wrapped-key            ; encrypted symmetric key material
    }
 
