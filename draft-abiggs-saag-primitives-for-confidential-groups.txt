@@ -452,10 +452,10 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
    smallest hash belongs.  If, as a result of this selection, an entity
    finds that a block that it had itself previously introduced to the
-   discarded GMBC is not represented in the retained GMBC, that entity
-   is responsible for appending a new block to the retained GMBC to
-   represent that membership update (and, of course, share that update
-   to other members).
+   discarded GMBC is not represented in the retained GMBC, then that
+   entity is responsible for appending a new block to the retained GMBC
+   to represent that membership update (and, of course, share that
+   update to other members).
 
 3.2.  Centralized Groups
 
