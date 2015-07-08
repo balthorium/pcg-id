@@ -68,23 +68,23 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
      1.1.  Terminology . . . . . . . . . . . . . . . . . . . . . . .   3
      1.2.  Notational Conventions  . . . . . . . . . . . . . . . . .   4
-   2.  Overview  . . . . . . . . . . . . . . . . . . . . . . . . . .   4
+   2.  Overview  . . . . . . . . . . . . . . . . . . . . . . . . . .   5
      2.1.  Authentication by Public Key Discovery  . . . . . . . . .   5
      2.2.  Authorization by Group Membership Block Chain . . . . . .   5
      2.3.  Key Distribution by Group Keys  . . . . . . . . . . . . .   6
    3.  Group Models  . . . . . . . . . . . . . . . . . . . . . . . .   8
-     3.1.  Unmoderated Groups  . . . . . . . . . . . . . . . . . . .   8
-     3.2.  Moderated Groups  . . . . . . . . . . . . . . . . . . . .   8
-   4.  Use Cases . . . . . . . . . . . . . . . . . . . . . . . . . .   9
-     4.1.  Unmoderated Group File Sharing  . . . . . . . . . . . . .  10
-     4.2.  Moderated Group Instant Messaging . . . . . . . . . . . .  10
-   5.  Functional Specifications . . . . . . . . . . . . . . . . . .  11
-     5.1.  Group Membership Chain Blocks . . . . . . . . . . . . . .  11
-     5.2.  Group Keys  . . . . . . . . . . . . . . . . . . . . . . .  11
+     3.1.  Decentralized Groups  . . . . . . . . . . . . . . . . . .   8
+     3.2.  Centralized Groups  . . . . . . . . . . . . . . . . . . .   8
+   4.  Use Cases . . . . . . . . . . . . . . . . . . . . . . . . . .  10
+     4.1.  Decentralized Group File Sharing  . . . . . . . . . . . .  10
+     4.2.  Centralized Group Instant Messaging . . . . . . . . . . .  11
+   5.  Functional Specifications . . . . . . . . . . . . . . . . . .  12
+     5.1.  Group Membership Chain Blocks . . . . . . . . . . . . . .  12
+     5.2.  Group Keys  . . . . . . . . . . . . . . . . . . . . . . .  12
    6.  Security Considerations . . . . . . . . . . . . . . . . . . .  12
    7.  Appendix A. Document History  . . . . . . . . . . . . . . . .  12
    8.  Normative References  . . . . . . . . . . . . . . . . . . . .  12
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  12
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  13
 
 1.  Introduction
 
@@ -140,8 +140,8 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
    extending group confidentiality to both new and existing
    communications and content sharing protocols.  With that in mind,
    however, this specification does advance the notion of recognizing
-   two general classes of deployment for these primitives: "moderated"
-   and "unmoderated".
+   two general classes of deployment for these primitives: "centralized"
+   and "decentralized".
 
    An additional non-goal of this specification is the establishment of
    mechanisms for the authentication of sender identity for encrypted
@@ -153,14 +153,14 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
 1.1.  Terminology
 
+   curator
+
+      An entity optionally identified in the genesis block of a GMBC as
+      a permanent member of a group that performs the function of
+      accepting and distributing GMBC updates and GKs among group
+      members.
+
    entity
-
-      An entity is a user or automated agent that is uniquely
-      identifiable by an acct URI [RFC7565] and for which there exists a
-      key discovery service [I-D.miller-saag-key-discovery] through
-      which public keys may be obtained for that URI.
-
-   genesis block
 
 
 
@@ -169,6 +169,13 @@ Biggs & Cooley           Expires January 4, 2016                [Page 3]
 
 Internet-Draprimitives-for-confidential-group-communications   July 2015
 
+
+      An entity is a user or automated agent that is uniquely
+      identifiable by an acct URI [RFC7565] and for which there exists a
+      key discovery service [I-D.miller-saag-key-discovery] through
+      which public keys may be obtained for that URI.
+
+   genesis block
 
       The first block in a group membership block chain.
 
@@ -209,13 +216,6 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
    and "OPTIONAL" are to be interpreted as described in BCP 14, RFC 2119
    [RFC2119].
 
-2.  Overview
-
-   This section provides a general overview of three basic constructs
-   for enabling authentication, authorization, and secure key exchange
-   in confidential group communications.
-
-
 
 
 
@@ -225,6 +225,12 @@ Biggs & Cooley           Expires January 4, 2016                [Page 4]
 
 Internet-Draprimitives-for-confidential-group-communications   July 2015
 
+
+2.  Overview
+
+   This section provides a general overview of three basic constructs
+   for enabling authentication, authorization, and secure key exchange
+   in confidential group communications.
 
 2.1.  Authentication by Public Key Discovery
 
@@ -269,18 +275,16 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
    o  a hash of the preceding block in the membership chain (if any).
 
-   A group membership update operation is a JSON object with two fields:
-
-   o  a tag indicating the operation type ("add" or "remove"), and
-
-
-
 
 
 Biggs & Cooley           Expires January 4, 2016                [Page 5]
 
 Internet-Draprimitives-for-confidential-group-communications   July 2015
 
+
+   A group membership update operation is a JSON object with two fields:
+
+   o  a tag indicating the operation type ("add" or "remove"), and
 
    o  the acct URI of the entity being either added to or removed from
       the group.
@@ -290,7 +294,7 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
    o  a URI that uniquely identifies the group communications resource,
 
-   o  the acct URI [RFC7565] of the group moderator (optional), and
+   o  the acct URI [RFC7565] of the group's curator (optional), and
 
    o  a nonce.
 
@@ -325,11 +329,7 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
    The exclusivity of access to the key material is achieved by
    encrypting the key material in such a way that it may be decrypted
    with the private entity key(s) of any one of the other group members.
-   The creating entity signs the GK such that the authenticity of the
-   associated metadata may be verified by its recipients.
 
-   More specifically, the payload of the GK is a JSON object including
-   attributes representing the following:
 
 
 
@@ -337,6 +337,12 @@ Biggs & Cooley           Expires January 4, 2016                [Page 6]
 
 Internet-Draprimitives-for-confidential-group-communications   July 2015
 
+
+   The creating entity signs the GK such that the authenticity of the
+   associated metadata may be verified by its recipients.
+
+   More specifically, the payload of the GK is a JSON object including
+   attributes representing the following:
 
    o  a URI that uniquely identifies the GK,
 
@@ -351,14 +357,14 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
       used for encryption.
 
    The JWK attribute value is encrypted in a JWE [RFC7516] JSON
-   serialization with one or more recipients.  In unmoderated groups the
-   resulting JSON serialization must include each other member of the
-   group as determined by the current and validated GMBC.  In moderated
-   groups the resulting JSON serialization may include as a recipient
-   just the moderator (e.g. when an entity shares a new GK) or just one
-   member (e.g. when the moderator shares a GK with a member that has
-   requested it).  The full JSON payload of the GK is signed as a JWS
-   [RFC7515] using the creator's private entity key.
+   serialization with one or more recipients.  In decentralized groups
+   the resulting JSON serialization must include each other member of
+   the group as determined by the current and validated GMBC.  In
+   centralized groups the resulting JSON serialization may include as a
+   recipient just the curator (e.g. when an entity shares a new GK) or
+   just one member (e.g. when the curator shares a GK with a member that
+   has requested it).  The full JSON payload of the GK is signed as a
+   JWS [RFC7515] using the creator's private entity key.
 
    GKs may be created by members and non-members alike.  A non-member
    may generate a GK as described above and use it to encrypt its own
@@ -374,18 +380,12 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
    communications unless it has verified that GK is signed by a current
    member of the group as defined by the GMBC.
 
-   Upon receiving and validating an update to the GMBC that includes
-   "remove" operations, each entity must discard their encryption GK and
-   produce a new encryption GK for which the recipients reflect the
-   updated GMBC membership.  This is necessary to ensure that new
-   members are able to decrypt subsequent communications but not prior
-   communications.  Perhaps more importantly, this also ensures that
-   former members are not able to decrypt subsequent group
-   communications.  In moderated groups the moderator may implement a
-   policy where it permits new group members to request previously
-   created GKs.
-
-
+   Upon receiving and validating an update to the GMBC, each entity must
+   discard their encryption GK and produce a new encryption GK for which
+   the recipients reflect the updated GMBC membership.  This is
+   necessary to ensure that new members are able to decrypt subsequent
+   communications but not prior communications.  Perhaps more
+   importantly, this also ensures that former members are not able to
 
 
 
@@ -393,6 +393,10 @@ Biggs & Cooley           Expires January 4, 2016                [Page 7]
 
 Internet-Draprimitives-for-confidential-group-communications   July 2015
 
+
+   decrypt subsequent group communications.  In centralized groups the
+   curator may implement a policy where it permits new group members to
+   request previously created GKs.
 
    It is recommended that all entities that share encrypted content over
    the group communications resource rotate their GKs regularly so as to
@@ -408,14 +412,14 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
    remains worthwhile, however, to discuss two general classes of
    confidential group communications and how the primitives defined by
    this specification may be leveraged in each.  These classes may be
-   described as "moderated groups" and "unmoderated groups".
+   described as "centralized groups" and "decentralized groups".
 
-3.1.  Unmoderated Groups
+3.1.  Decentralized Groups
 
-   An unmoderated group is characterized by the absence of a moderator
+   A decentralized group is characterized by the absence of a curator
    attribute in the GMBC genesis block and therefore the absence of a
    permanent member within the group through which GMBC and GK objects
-   may be exchanged.  In an unmoderated group these objects may instead
+   may be exchanged.  In a decentralized group these objects may instead
    be exchanged either in-band through the group communications resource
    itself, or through in-band references to external repositories within
    which GMBC and GK objects are stored.  Both the GMBC and GK objects
@@ -423,25 +427,21 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
    data such that they may be reasonably exchanged through either public
    or private transports and stores.
 
-3.2.  Moderated Groups
+3.2.  Centralized Groups
 
-   A moderated group is characterized by the presence of a moderator
-   attribute in the GMBC genesis block.  The moderator attribute
+   A centralized group is characterized by the presence of a curator
+   attribute in the GMBC genesis block.  The curator attribute
    identifies an entity by its acct URI [RFC7565] and declares that
    entity as a permanent member of the group which will serve as a
    facilitator for the exchange of GMBC and GK objects among all group
-   members.  In particular, a moderator will respond to the following
+   members.  In particular, a curator will respond to the following
    types of requests from other entities.  Note that the means by which
-   these operations are carried out between members and the moderator is
+   these operations are carried out between members and the curator is
    out of scope for this document.
 
    GMBC Post
 
-      When adding or removing members from a group, a member will submit
-      a new GMBC block to the moderator representing that change.  The
-      moderator will verify that the block is signed by a member of the
-      group and that the hash attribute of the block represents the hash
-      of the current tail end of the chain.  If both checks succeed then
+
 
 
 
@@ -450,53 +450,53 @@ Biggs & Cooley           Expires January 4, 2016                [Page 8]
 Internet-Draprimitives-for-confidential-group-communications   July 2015
 
 
-      the moderator will make the new block a permanent part of the GMBC
+      When adding or removing members from a group, a member will submit
+      a new GMBC block to the curator representing that change.  The
+      curator will verify that the block is signed by a member of the
+      group and that the hash attribute of the block represents the hash
+      of the current tail end of the chain.  If both checks succeed then
+      the curator will make the new block a permanent part of the GMBC
       and indicate to the requesting entity that the update was
       successful.
 
    GMBC Get
 
       Entities may request all or part of the current GMBC from the
-      moderator by providing to the GMBC a hash of the last GMBC block
-      of which they are aware (or 0x0 if they are requesting the entire
+      curator by providing to the GMBC a hash of the last GMBC block of
+      which they are aware (or 0x0 if they are requesting the entire
       chain).
 
    GMBC Notify (optional)
 
-      In some deployments it may be desirable for a moderator to
+      In some deployments it may be desirable for a curator to
       immediately multicast GMBC updates to all current members of the
       group.  This may be based on either an explicit or automatic/
       implicit subscription model.
 
    GK Post
 
-      Entities may inform the moderator of new GKs which they have
+      Entities may inform the curator of new GKs which they have
       generated for the purpose of encrypting data they emit to the
-      group communications resource.  The moderator will store a
-      received GKs such that it may subsequently service requests for
-      that GK from other members that wish to decrypt these
-      communications.
+      group communications resource.  The curator will store a received
+      GKs such that it may subsequently service requests for that GK
+      from other members that wish to decrypt these communications.
 
    GK Get
 
-      Members may request from the moderator GKs which have been
-      generated by other entities.  In doing so, an entity must indicate
-      the URI of the requested GK and the moderator must verify that the
+      Members may request from the curator GKs which have been generated
+      by other entities.  In doing so, an entity must indicate the URI
+      of the requested GK and the curator must verify that the
       requesting entity was a member of the group at the time the GK was
       created by processing the GMBC from the genesis block up to and
       including the block whose hash is indicated in the metadata of the
       requested GK.  A successful confirmation of the requesting entity
       as a member of the group at that point in time will result in the
-      moderator generating a new GK which is in every way identical to
-      the requested GK except that the key material is re-encrypted
-      using the public key of the requesting entity and the GK itself is
-      signed using the moderator's own public entity key.
+      curator generating a new GK which is in every way identical to the
+      requested GK except that the key material is re-encrypted using
+      the public key of the requesting entity and the GK itself is
+      signed using the curator's own public entity key.
 
-4.  Use Cases
 
-   The following are non-normative examples of how the primitives
-   described in this specification may be employed to facilitate
-   confidential group communications.
 
 
 
@@ -506,7 +506,13 @@ Biggs & Cooley           Expires January 4, 2016                [Page 9]
 Internet-Draprimitives-for-confidential-group-communications   July 2015
 
 
-4.1.  Unmoderated Group File Sharing
+4.  Use Cases
+
+   The following are non-normative examples of how the primitives
+   described in this specification may be employed to facilitate
+   confidential group communications.
+
+4.1.  Decentralized Group File Sharing
 
    This use case describes an application that utilizes some third party
    file sharing service to store confidential information and employs
@@ -547,12 +553,6 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
    8.  User C repeats the procedure outlined for user B in steps 6 and
        7.
 
-4.2.  Moderated Group Instant Messaging
-
-   This use case describes an application that utilizes some instant
-   messaging service to exchange confidential messages among a group of
-   users and employs this specification as part of a scheme to secure
-   that confidentiality among the members as a moderated group.
 
 
 
@@ -562,6 +562,13 @@ Biggs & Cooley           Expires January 4, 2016               [Page 10]
 Internet-Draprimitives-for-confidential-group-communications   July 2015
 
 
+4.2.  Centralized Group Instant Messaging
+
+   This use case describes an application that utilizes some instant
+   messaging service to exchange confidential messages among a group of
+   users and employs this specification as part of a scheme to secure
+   that confidentiality among the members as a centralized group.
+
    1.  User A establishes a messaging thread on the messaging service
        that includes users B and C.  We presume it can be associated
        with some unique URI for purposes of identification.
@@ -570,9 +577,9 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
        block user A includes a reference to the URI of the messaging
        thread created in step 2, and three group membership "add"
        operations: one for itself, one for user B, and one for user C.
-       User A also identifies itself as the moderator of the group by
+       User A also identifies itself as the curator of the group by
        provisioning the genesis block with its own acct URI in the
-       moderator field.
+       curator field.
 
    3.  User A creates a GK that includes a hash of the GMBC genesis
        block.
@@ -587,10 +594,10 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
        by discovering and retrieving user A's public entity key through
        [I-D.miller-saag-key-discovery].
 
-   6.  User B observes that the GMBC indicates user A as the moderator
-       for this group and sends a request (perhaps as an in-band
-       extension to the instant messaging protocol) to user A for the GK
-       used to encrypt the message sent in step 3.
+   6.  User B observes that the GMBC indicates user A as the curator for
+       this group and sends a request (perhaps as an in-band extension
+       to the instant messaging protocol) to user A for the GK used to
+       encrypt the message sent in step 3.
 
    7.  User A receives the GK request from user B, validates that user B
        was a member of the GMBC at the time the requested GK was
@@ -601,13 +608,6 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
    8.  User C repeats the procedure outlined for user B in steps 4
        through 6.
 
-5.  Functional Specifications
-
-5.1.  Group Membership Chain Blocks
-
-5.2.  Group Keys
-
-
 
 
 
@@ -617,6 +617,12 @@ Biggs & Cooley           Expires January 4, 2016               [Page 11]
 
 Internet-Draprimitives-for-confidential-group-communications   July 2015
 
+
+5.  Functional Specifications
+
+5.1.  Group Membership Chain Blocks
+
+5.2.  Group Keys
 
 6.  Security Considerations
 
@@ -656,12 +662,6 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
    [RFC7565]  Saint-Andre, P., "The 'acct' URI Scheme", RFC 7565, May
               2015.
 
-Authors' Addresses
-
-   Andrew Biggs
-   Cisco Systems
-
-   Email: adb@cisco.com
 
 
 
@@ -674,18 +674,18 @@ Biggs & Cooley           Expires January 4, 2016               [Page 12]
 Internet-Draprimitives-for-confidential-group-communications   July 2015
 
 
+Authors' Addresses
+
+   Andrew Biggs
+   Cisco Systems
+
+   Email: adb@cisco.com
+
+
    Shaun Cooley
    Cisco Systems
 
    Email: shcooley@cisco.com
-
-
-
-
-
-
-
-
 
 
 

@@ -67,6 +67,10 @@ An additional non-goal of this specification is the establishment of mechanisms 
 
 ## Terminology {#terminology}
 
+curator
+
+> An entity optionally identified in the genesis block of a GMBC as a permanent member of a group that performs the function of accepting and distributing GMBC updates and GKs among group members.
+
 entity
 
 > An entity is a user or automated agent that is uniquely identifiable by an acct URI {{RFC7565}} and for which there exists a key discovery service {{I-D.miller-saag-key-discovery}} through which public keys may be obtained for that URI.
@@ -129,7 +133,7 @@ A group membership update operation is a JSON object with two fields:
 In addition to the above attributes the first block of the chain, or genesis block, also includes the following attributes:
 
   * a URI that uniquely identifies the group communications resource, 
-  * the acct URI {{RFC7565}} of the group's central authority (optional), and
+  * the acct URI {{RFC7565}} of the group's curator (optional), and
   * a nonce.
 
 The genesis block must also include at least one "add" operation, though it need not necessarily represent the addition of the entity that created it (i.e. entities may create new groups within which they are not themselves members).
@@ -150,13 +154,13 @@ More specifically, the payload of the GK is a JSON object including attributes r
   * an encrypted JWK {{RFC7517}} that represents the symmetric key material, and
   * a timestamp indicating a time beyond which the key should not be used for encryption.
 
-The JWK attribute value is encrypted in a JWE {{RFC7516}} JSON serialization with one or more recipients.  In decentralized groups the resulting JSON serialization must include each other member of the group as determined by the current and validated GMBC.  In centralized groups the resulting JSON serialization may include as a recipient just the central authority (e.g. when an entity shares a new GK) or just one member (e.g. when the central authority shares a GK with a member that has requested it).  The full JSON payload of the GK is signed as a JWS {{RFC7515}} using the creator's private entity key.
+The JWK attribute value is encrypted in a JWE {{RFC7516}} JSON serialization with one or more recipients.  In decentralized groups the resulting JSON serialization must include each other member of the group as determined by the current and validated GMBC.  In centralized groups the resulting JSON serialization may include as a recipient just the curator (e.g. when an entity shares a new GK) or just one member (e.g. when the curator shares a GK with a member that has requested it).  The full JSON payload of the GK is signed as a JWS {{RFC7515}} using the creator's private entity key.
 
 GKs may be created by members and non-members alike.  A non-member may generate a GK as described above and use it to encrypt its own communications to the group.  This can be a useful property as it provides for a confidential "write only" capability to the group communications resource.  
 
 A group may have any number of GKs associated with it.  Where practical, it is recommended that each member of a group use its own GK for purposes of encryption and share this GK with the remainder of the group for purposes of decryption.  A member must not re-use the keying material of a GK created by another entity to encrypt it's own communications unless it has verified that GK is signed by a current member of the group as defined by the GMBC.
 
-Upon receiving and validating an update to the GMBC that includes "remove" operations, each entity must discard their encryption GK and produce a new encryption GK for which the recipients reflect the updated GMBC membership.  This is necessary to ensure that new members are able to decrypt subsequent communications but not prior communications.  Perhaps more importantly, this also ensures that former members are not able to decrypt subsequent group communications.  In centralized groups the central authority may implement a policy where it permits new group members to request previously created GKs.
+Upon receiving and validating an update to the GMBC, each entity must discard their encryption GK and produce a new encryption GK for which the recipients reflect the updated GMBC membership.  This is necessary to ensure that new members are able to decrypt subsequent communications but not prior communications.  Perhaps more importantly, this also ensures that former members are not able to decrypt subsequent group communications.  In centralized groups the curator may implement a policy where it permits new group members to request previously created GKs.
 
 It is recommended that all entities that share encrypted content over the group communications resource rotate their GKs regularly so as to mitigate against vulnerabilities that are exacerbated by the extended use of individual keys.
 
@@ -166,37 +170,37 @@ While this specification provides definition for constructs that enable confiden
 
 ## Decentralized Groups
 
-A decentralized group is characterized by the absence of a central authority attribute in the GMBC genesis block and therefore the absence of a permanent member within the group through which GMBC and GK objects may be exchanged.  In a decentralized group these objects may instead be exchanged either in-band through the group communications resource itself, or through in-band references to external repositories within which GMBC and GK objects are stored.  Both the GMBC and GK objects are designed to be hardened against tampering and protect sensitive data such that they may be reasonably exchanged through either public or private transports and stores.
+A decentralized group is characterized by the absence of a curator attribute in the GMBC genesis block and therefore the absence of a permanent member within the group through which GMBC and GK objects may be exchanged.  In a decentralized group these objects may instead be exchanged either in-band through the group communications resource itself, or through in-band references to external repositories within which GMBC and GK objects are stored.  Both the GMBC and GK objects are designed to be hardened against tampering and protect sensitive data such that they may be reasonably exchanged through either public or private transports and stores.
 
 ## Centralized Groups
 
-A centralized group is characterized by the presence of a central authority attribute in the GMBC genesis block.  The central authority attribute identifies an entity by its acct URI {{RFC7565}} and declares that entity as a permanent member of the group which will serve as a facilitator for the exchange of GMBC and GK objects among all group members.  In particular, a central authority will respond to the following types of requests from other entities.  Note that the means by which these operations are carried out between members and the central authority is out of scope for this document.
+A centralized group is characterized by the presence of a curator attribute in the GMBC genesis block.  The curator attribute identifies an entity by its acct URI {{RFC7565}} and declares that entity as a permanent member of the group which will serve as a facilitator for the exchange of GMBC and GK objects among all group members.  In particular, a curator will respond to the following types of requests from other entities.  Note that the means by which these operations are carried out between members and the curator is out of scope for this document.
 
 GMBC Post
 
-> When adding or removing members from a group, a member will submit a new GMBC block to the central authority representing that change.  The central authority will verify that the block is signed by a member of the group and that the hash attribute of the block represents the hash of the current tail end of the chain.  If both checks succeed then the central authority will make the new block a permanent part of the GMBC and indicate to the requesting entity that the update was successful.
+> When adding or removing members from a group, a member will submit a new GMBC block to the curator representing that change.  The curator will verify that the block is signed by a member of the group and that the hash attribute of the block represents the hash of the current tail end of the chain.  If both checks succeed then the curator will make the new block a permanent part of the GMBC and indicate to the requesting entity that the update was successful.
 
 GMBC Get
 
-> Entities may request all or part of the current GMBC from the central authority by providing to the GMBC a hash of the last GMBC block of which they are aware (or 0x0 if they are requesting the entire chain).
+> Entities may request all or part of the current GMBC from the curator by providing to the GMBC a hash of the last GMBC block of which they are aware (or 0x0 if they are requesting the entire chain).
 
 GMBC Notify (optional)
 
-> In some deployments it may be desirable for a central authority to immediately multicast GMBC updates to all current members of the group.  This may be based on either an explicit or automatic/implicit subscription model.
+> In some deployments it may be desirable for a curator to immediately multicast GMBC updates to all current members of the group.  This may be based on either an explicit or automatic/implicit subscription model.
 
 GK Post
 
-> Entities may inform the central authority of new GKs which they have generated for the purpose of encrypting data they emit to the group communications resource.  The central authority will store a received GKs such that it may subsequently service requests for that GK from other members that wish to decrypt these communications.
+> Entities may inform the curator of new GKs which they have generated for the purpose of encrypting data they emit to the group communications resource.  The curator will store a received GKs such that it may subsequently service requests for that GK from other members that wish to decrypt these communications.
 
 GK Get
 
-> Members may request from the central authority GKs which have been generated by other entities.  In doing so, an entity must indicate the URI of the requested GK and the central authority must verify that the requesting entity was a member of the group at the time the GK was created by processing the GMBC from the genesis block up to and including the block whose hash is indicated in the metadata of the requested GK.  A successful confirmation of the requesting entity as a member of the group at that point in time will result in the central authority generating a new GK which is in every way identical to the requested GK except that the key material is re-encrypted using the public key of the requesting entity and the GK itself is signed using the central authority's own public entity key.
+> Members may request from the curator GKs which have been generated by other entities.  In doing so, an entity must indicate the URI of the requested GK and the curator must verify that the requesting entity was a member of the group at the time the GK was created by processing the GMBC from the genesis block up to and including the block whose hash is indicated in the metadata of the requested GK.  A successful confirmation of the requesting entity as a member of the group at that point in time will result in the curator generating a new GK which is in every way identical to the requested GK except that the key material is re-encrypted using the public key of the requesting entity and the GK itself is signed using the curator's own public entity key.
 
 # Use Cases
 
 The following are non-normative examples of how the primitives described in this specification may be employed to facilitate confidential group communications.
 
-## Unmoderated Group File Sharing 
+## Decentralized Group File Sharing 
 
 This use case describes an application that utilizes some third party file sharing service to store confidential information and employs this specification as part of a scheme to secure that confidentiality among the members of self defined group.
 
@@ -216,13 +220,13 @@ This use case describes an application that utilizes some third party file shari
 
 8. User C repeats the procedure outlined for user B in steps 6 and 7.
 
-## Moderated Group Instant Messaging
+## Centralized Group Instant Messaging
 
-This use case describes an application that utilizes some instant messaging service to exchange confidential messages among a group of users and employs this specification as part of a scheme to secure that confidentiality among the members as a moderated group.
+This use case describes an application that utilizes some instant messaging service to exchange confidential messages among a group of users and employs this specification as part of a scheme to secure that confidentiality among the members as a centralized group.
 
 1. User A establishes a messaging thread on the messaging service that includes users B and C.  We presume it can be associated with some unique URI for purposes of identification.
 
-2. User A generates a new GMBC by creating a genesis block.  In that block user A includes a reference to the URI of the messaging thread created in step 2, and three group membership "add" operations: one for itself, one for user B, and one for user C.  User A also identifies itself as the moderator of the group by provisioning the genesis block with its own acct URI in the moderator field.
+2. User A generates a new GMBC by creating a genesis block.  In that block user A includes a reference to the URI of the messaging thread created in step 2, and three group membership "add" operations: one for itself, one for user B, and one for user C.  User A also identifies itself as the curator of the group by provisioning the genesis block with its own acct URI in the curator field.
 
 3. User A creates a GK that includes a hash of the GMBC genesis block.
 
@@ -230,7 +234,7 @@ This use case describes an application that utilizes some instant messaging serv
 
 5. User B recognizes user A's acct URI as the identity of a trusted correspondent and validates the GMBC as originating from user A by discovering and retrieving user A's public entity key through {{I-D.miller-saag-key-discovery}}.
 
-6. User B observes that the GMBC indicates user A as the moderator for this group and sends a request (perhaps as an in-band extension to the instant messaging protocol) to user A for the GK used to encrypt the message sent in step 3.
+6. User B observes that the GMBC indicates user A as the curator for this group and sends a request (perhaps as an in-band extension to the instant messaging protocol) to user A for the GK used to encrypt the message sent in step 3.
 
 7. User A receives the GK request from user B, validates that user B was a member of the GMBC at the time the requested GK was created, and returns a copy of the GK created in step 3 with the keying material portion encrypted using the public entity key of user B.
 
