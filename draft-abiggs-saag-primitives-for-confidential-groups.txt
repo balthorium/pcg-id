@@ -78,13 +78,14 @@ Table of Contents
    4.  Use Cases . . . . . . . . . . . . . . . . . . . . . . . . . .  10
      4.1.  Decentralized Group File Sharing  . . . . . . . . . . . .  10
      4.2.  Centralized Group Instant Messaging . . . . . . . . . . .  11
-   5.  Functional Specifications . . . . . . . . . . . . . . . . . .  12
-     5.1.  Group Membership Chain Blocks . . . . . . . . . . . . . .  12
-     5.2.  Group Keys  . . . . . . . . . . . . . . . . . . . . . . .  12
-   6.  Security Considerations . . . . . . . . . . . . . . . . . . .  12
-   7.  Appendix A. Document History  . . . . . . . . . . . . . . . .  12
-   8.  Normative References  . . . . . . . . . . . . . . . . . . . .  12
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  13
+   5.  Primitive Specifications  . . . . . . . . . . . . . . . . . .  12
+     5.1.  Entity  . . . . . . . . . . . . . . . . . . . . . . . . .  12
+     5.2.  Group Membership Block Chain  . . . . . . . . . . . . . .  12
+     5.3.  Group Key . . . . . . . . . . . . . . . . . . . . . . . .  13
+   6.  Security Considerations . . . . . . . . . . . . . . . . . . .  13
+   7.  Appendix A. Document History  . . . . . . . . . . . . . . . .  13
+   8.  Normative References  . . . . . . . . . . . . . . . . . . . .  13
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  14
 
 1.  Introduction
 
@@ -104,7 +105,6 @@ Table of Contents
    counterpart of a public key discoverable through a key discovery
    service [I-D.miller-saag-key-discovery] available from a well-known
    URL.
-
 
 
 
@@ -350,8 +350,8 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
    o  a hash of the GMBC tail block at the time this key was created,
 
-   o  an encrypted JWK [RFC7517] that represents the symmetric key
-      material, and
+   o  an encrypted [RFC7517] that represents the symmetric key material,
+      and
 
    o  a timestamp indicating a time beyond which the key should not be
       used for encryption.
@@ -618,11 +618,63 @@ Biggs & Cooley           Expires January 4, 2016               [Page 11]
 Internet-Draprimitives-for-confidential-group-communications   July 2015
 
 
-5.  Functional Specifications
+5.  Primitive Specifications
 
-5.1.  Group Membership Chain Blocks
+   This section provides normative definition for the objects introduced
+   in this document.
 
-5.2.  Group Keys
+5.1.  Entity
+
+   An entity is identified by an acct URI [RFC7565], its associated
+   public entity key is discovered through key discovery as described in
+   [I-D.miller-saag-key-discovery], and that key is represented as a JWK
+   [RFC7517] also as defined in that specification.
+
+5.2.  Group Membership Block Chain
+
+   A GMBC is composed of JSON encoded blocks, each signed with the
+   private key of the entity that introduced that block to the chain.
+   Signing is performed in conformance with the JWS [RFC7515]
+   specification and the block is communicated between entities in the
+   form of a JWS compact serialization.
+
+   The payload of a standard GMBC block is defined as follows, using
+   JSON content rules notation [I-D.newton-json-content-rules].
+
+   operation "Operation" {
+       "entity": uri,
+       "optype": < "add" "remove" >
+   }
+
+   gmbc-block {
+       "entity": uri,
+       "created": date-time,
+       "antecedent": string,
+       "operations" [ *: operation ]
+   }
+
+   root gmbc-block
+
+   A GMBC genesis block has the same specification as a standard block
+   but with three additional payload fields, as defined below.
+
+   gmbc-genesis-block {
+       "resource": uri,
+       "curator": ?uri,
+       "nonce": integer,
+       gmbc-block
+   }
+
+   root gmbc-genesis-block
+
+
+
+Biggs & Cooley           Expires January 4, 2016               [Page 12]
+
+Internet-Draprimitives-for-confidential-group-communications   July 2015
+
+
+5.3.  Group Key
 
 6.  Security Considerations
 
@@ -641,6 +693,11 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
               Miller, M. and S. Nandakumar, "Key Discovery Service",
               draft-miller-saag-key-discovery-00 (work in progress),
               July 2015.
+
+   [I-D.newton-json-content-rules]
+              Newton, A., "A Language for Rules Describing JSON
+              Content", draft-newton-json-content-rules-02 (work in
+              progress), August 2014.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
@@ -668,8 +725,7 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 
 
 
-
-Biggs & Cooley           Expires January 4, 2016               [Page 12]
+Biggs & Cooley           Expires January 4, 2016               [Page 13]
 
 Internet-Draprimitives-for-confidential-group-communications   July 2015
 
@@ -725,4 +781,4 @@ Authors' Addresses
 
 
 
-Biggs & Cooley           Expires January 4, 2016               [Page 13]
+Biggs & Cooley           Expires January 4, 2016               [Page 14]
