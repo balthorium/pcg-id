@@ -641,31 +641,31 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
    The payload of a standard GMBC block is defined as follows, using
    JSON content rules notation [I-D.newton-json-content-rules].
 
-   operation "Operation" {
-       "entity": uri,
-       "optype": < "add" "remove" >
-   }
+operation "Operation" {
+    "entity": uri,                ; acct URI of the entity added/removed
+    "optype": < "add" "remove" >  ; tag indicating the type of operation
+}
 
-   gmbc-block {
-       "creator": uri,
-       "created": date-time,
-       "antecedent": string,
-       "operations" [ *: operation ]
-   }
+gmbc-block {
+    "creator": uri,               ; acct URI of the creator of the block
+    "created": date-time,         ; the date and time of block creation
+    "antecedent": string,         ; SHA-256 hash of the preceeding block
+    "operations" [ *: operation ] ; membership update operations
+}
 
-   root gmbc-block
+root gmbc-block
 
    A GMBC genesis block has the same specification as a standard block
    but with three additional payload fields, as defined below.
 
-   gmbc-genesis-block {
-       "resource": uri,
-       "curator": ?uri,
-       "nonce": integer,
-       gmbc-block
-   }
+  gmbc-genesis-block {
+      "resource": uri,              ; URI of the group comms. resource
+      "curator": ?uri,              ; (optional) acct URI of the curator
+      "nonce": integer,             ; a random one-time numeric value
+      gmbc-block                    ; include standard block attributes
+  }
 
-   root gmbc-genesis-block
+  root gmbc-genesis-block
 
 
 
@@ -677,19 +677,19 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
 5.3.  Group Key
 
    A GK is composed of JSON encoded blocks, each signed with the private
-   key of the entity that created it (or the curator in centralized
-   groups).  Signing is performed in conformance with the JWS [RFC7515]
-   specification and the block is communicated between entities in the
-   form of a JWS compact serialization.
+   key of the entity that created it (or the curator when servicing GK
+   requests in centralized groups).  Signing is performed in conformance
+   with the JWS [RFC7515] specification and the block is communicated
+   between entities in the form of a JWS compact serialization.
 
    The payload of a GK is defined as follows.
 
    group-key {
-       "uri": uri,
-       "creator": uri,
-       "created": date-time,
-       "block": string,
-       "key": wrapped-key
+       "uri": uri,                   ; URI to identify the GK itself
+       "creator": uri,               ; acct URI of the creator of the GK
+       "created": date-time,         ; the date and time of GK creation
+       "block": string,              ; SHA-256 hash of assoc. GMBC block
+       "key": wrapped-key            ; encrypted symmetric key material
    }
 
    root group-key
