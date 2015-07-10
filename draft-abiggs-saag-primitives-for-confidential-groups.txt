@@ -68,7 +68,7 @@ Table of Contents
      1.1.  Terminology . . . . . . . . . . . . . . . . . . . . . . .   3
      1.2.  Notational Conventions  . . . . . . . . . . . . . . . . .   4
    2.  Overview  . . . . . . . . . . . . . . . . . . . . . . . . . .   5
-     2.1.  Authentication by Public Key Discovery  . . . . . . . . .   5
+     2.1.  Authentication by Entity Public Key . . . . . . . . . . .   5
      2.2.  Authorization by Group Membership Block Chain . . . . . .   5
      2.3.  Key Distribution by Group Keys  . . . . . . . . . . . . .   6
    3.  Group Models  . . . . . . . . . . . . . . . . . . . . . . . .   8
@@ -232,7 +232,7 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
    for enabling authentication, authorization, and secure key exchange
    in confidential group communications.
 
-2.1.  Authentication by Public Key Discovery
+2.1.  Authentication by Entity Public Key
 
    In the context of this specification entity authentication is defined
    as the demonstration of possession of the private component of an

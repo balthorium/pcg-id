@@ -110,7 +110,7 @@ and "OPTIONAL" are to be interpreted as described in BCP 14, RFC 2119
 
 This section provides a general overview of three basic constructs for enabling authentication, authorization, and secure key exchange in confidential group communications.
 
-## Authentication by Public Key Discovery
+## Authentication by Entity Public Key
 
 In the context of this specification entity authentication is defined as the demonstration of possession of the private component of an asymmetric key pair.  Specifically, an entity uniquely identified by an acct URI {{RFC7565}} may be authenticated by demonstrating possession of the private counterpart of one or more public keys as may be discovered using that acct URI and the mechanisms described in {{I-D.miller-saag-key-discovery}}.  
 
