@@ -300,7 +300,7 @@ root gmbc-appended-block
 
 ## Group Key
 
-A GK is composed of JSON encoded blocks, each signed with the private key of the entity that created it (or the curator when servicing GK requests in centralized groups).  Signing is performed in conformance with the JWS {{RFC7515}} specification and the block is communicated between entities in the form of a JWS compact serialization.
+A GK is composed of JSON encoded blocks, each signed with the private key of the entity that created it (or the curator when servicing GK requests in centralized groups).  Signing is performed in conformance with the JWS specification and the block is communicated between entities in the form of a JWS compact serialization.
 
 The payload of a GK is defined as follows.
 
