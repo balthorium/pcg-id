@@ -272,8 +272,6 @@ gmbc-block {
     "antecedent": string,         ; SHA-256 hash of preceding block
     "operations" [ *: operation ] ; membership update operations
 }
-
-root gmbc-block
 ~~~
 
 A GMBC genesis block is specified as a basic block with three additional payload fields, as defined below.
@@ -296,6 +294,8 @@ gmbc-appended-block {
     "antecedent": string,         ; SHA-256 hash of preceding block
     gmbc-block                    ; standard block attributes
 }
+
+root gmbc-appended-block
 ~~~
 
 ## Group Key

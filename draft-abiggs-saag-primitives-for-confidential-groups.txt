@@ -686,8 +686,6 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
        "operations" [ *: operation ] ; membership update operations
    }
 
-   root gmbc-block
-
    A GMBC genesis block is specified as a basic block with three
    additional payload fields, as defined below.
 
@@ -707,6 +705,8 @@ Internet-Draprimitives-for-confidential-group-communications   July 2015
        "antecedent": string,         ; SHA-256 hash of preceding block
        gmbc-block                    ; standard block attributes
    }
+
+   root gmbc-appended-block
 
 5.3.  Group Key
 
