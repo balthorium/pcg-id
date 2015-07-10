@@ -55,7 +55,7 @@ This specification defines generalized primitives for use in establishing end-to
  * Group Membership
  * Secure Key Exchange 
   
-Authentication is based on the identification of interoperating entities by acct URI and proof of possession of the private counterpart of a public key discoverable through a key discovery service {{I-D.miller-saag-key-discovery}} available from a well-known URL.
+Authentication is based on the identification of interoperating entities by acct URI {{RFC7565}} and proof of possession of the private counterpart of a public key discoverable through a key discovery service {{I-D.miller-saag-key-discovery}} available from a well-known URL.
 
 Authorization is based on the group membership classification of authenticated entities, as represented in the form of a Group Membership Block Chain (GMBC) structure defined by this specification.  Critical properties of the GMBC are tamper-resistance, efficient mutability, broad deployability, and integrity in the context of distributed handling.
 
@@ -75,7 +75,7 @@ curator
 
 entity
 
-> An entity is a user or automated agent that is uniquely identifiable by an acct URI {{RFC7565}} and for which there exists a key discovery service {{I-D.miller-saag-key-discovery}} through which public keys may be obtained for that URI.
+> An entity is a user or automated agent that is uniquely identifiable by an acct URI and for which there exists a key discovery service {{I-D.miller-saag-key-discovery}} through which public keys may be obtained for that URI.
 
 genesis block
 
@@ -142,7 +142,7 @@ The genesis block must also include at least one "add" operation, though it need
 
 The membership of the group is implicit and may be determined by processing the GMBC in chronological order.  At any given point in time the membership of the group is defined as that set of entities for which there exists, for each entity, a previously introduced block containing an "add" operation for which there does not exist a subsequent but also previously introduced block containing a "remove" operation.
 
-To protect against unauthorized tampering the GMBC is validated by verifying the signatures of each block, verifying that each non-genesis block contains a valid hash of the preceding block, and verifying that each block is created by an entity that is among the group's membership as determined by the segment of chain preceding that block.  Block signature verification is made possible through the key discovery mechanisms defined in {{I-D.miller-saag-key-discovery}} and the knowledge of each member's acct URI.
+To protect against unauthorized tampering the GMBC is validated by verifying the signatures of each block, verifying that each non-genesis block contains a valid hash of the preceding block, and verifying that each block was created and signed by an entity that is among the group's membership as determined by the segment of chain preceding that block.  Block signature verification is made possible through the key discovery mechanisms defined in {{I-D.miller-saag-key-discovery}} and the knowledge of each member's acct URI.
 
 ## Key Distribution by Group Keys
 
