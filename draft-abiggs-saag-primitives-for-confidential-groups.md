@@ -153,7 +153,7 @@ The payload of the GK is a JSON object includes attributes representing the foll
   * a URI that uniquely identifies the GK,
   * the acct URI of the creator of the GK,
   * a hash of the GMBC tail block at the time this key was created,
-  * an encrypted JWE {{RFC7517}} that contains the symmetric key material, and
+  * an encrypted JWK {{RFC7517}} that contains the symmetric key material, and
   * a timestamp indicating the date and time the GK was created.
 
 The JWK attribute value is encrypted in a JWE {{RFC7516}} JSON serialization with one or more recipients.  In decentralized groups the resulting JWE JSON serialization must include each other member of the group as determined by the current and validated GMBC.  In centralized groups the resulting JWE JSON serialization may include as a recipient just the curator (e.g. when an entity shares a new GK) or just one member (e.g. when the curator shares a GK with a member that has requested it).  The full JSON payload of the GK is signed as a JWS {{RFC7515}} using the creator's private entity key.
@@ -258,7 +258,7 @@ An entity is identified by an acct URI {{RFC7565}}, its associated public entity
 
 A GMBC is composed of JSON encoded blocks, each signed with the private key of the entity that introduced that block to the chain.  Signing is performed in conformance with the JWS {{RFC7515}} specification and the block is communicated between entities in the form of a JWS compact serialization.
 
-The payload of a standard GMBC block is defined as follows, using JSON content rules notation {{I-D.newton-json-content-rules}}.
+The basic payload of a GMBC block is defined as follows, using JSON content rules notation {{I-D.newton-json-content-rules}}.
 
 ~~~
 operation "Operation" {
@@ -276,7 +276,7 @@ gmbc-block {
 root gmbc-block
 ~~~
 
-A GMBC genesis block has the same specification as a standard block but with three additional payload fields, as defined below.
+A GMBC genesis block is specified as a basic block with three additional payload fields, as defined below.
 
 ~~~
 gmbc-genesis-block {
@@ -287,6 +287,15 @@ gmbc-genesis-block {
 }
 
 root gmbc-genesis-block
+~~~
+
+A GMBC non-genesis block is specified as a basic block with one additional payload field, as defined below.
+
+~~~
+gmbc-appended-block {
+    "antecedent": string,         ; SHA-256 hash of preceding block
+    gmbc-block                    ; standard block attributes
+}
 ~~~
 
 ## Group Key
