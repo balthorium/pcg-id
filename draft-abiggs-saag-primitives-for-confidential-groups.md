@@ -118,7 +118,7 @@ In the context of this specification entity authentication is defined as the dem
 
 In the context of this specification authorization is defined as the classification of any given entity as either a "member" or "non-member" with respect to a group.  A member of the group is by definition authorized to receive keying material used to encrypt group communications, and likewise a non-member is not.  A member is also entitled to alter the membership of the group.  The means by which group membership classification established, updated, and validated, is through operations on a Group Membership Block Chain (GMBC).  
 
-A GMBC is an ordered list of data blocks representing a tamper-resistant chronological account of group membership updates.  The first block in the GMBC defines the initial set of group members and each subsequent block represents an addition/removal of one or more other entities to/from the group.  Any entity can create a GMBC, but only members can update it by appending new blocks.
+A GMBC is an ordered list of data blocks representing a tamper-resistant chronological account of group membership updates.  The first block in the GMBC defines the initial set of group members and each subsequent block represents an addition/removal of one or more other entities to/from the group.  Any entity can create a GMBC, but only a member can update an existing GMBC by appending new blocks to it.
 
 Each block consists of a JSON object signed with the private key of the entity that created that block within the chain.  That JSON object includes attributes representing the following:
 
