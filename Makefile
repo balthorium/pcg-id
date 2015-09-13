@@ -1,4 +1,4 @@
-NAME=draft-abiggs-saag-primitives-for-confidential-group-comms
+NAME=draft-abiggs-saag-primitives-for-conf-group-comms
 MD=kramdown-rfc2629
 X2R=xml2rfc
 CF=cupsfilter

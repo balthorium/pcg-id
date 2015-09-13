@@ -1,7 +1,7 @@
 ---
 title: Primitives for Confidential Group Communications
-abbrev: primitives-for-confidential-group-comms
-docname: draft-abiggs-saag-primitives-for-confidential-group-comms-00
+abbrev: primitives-for-conf-group-comms
+docname: draft-abiggs-saag-primitives-for-conf-group-comms-00
 date: 2015-09-11
 category: std
 ipr: trust200902
