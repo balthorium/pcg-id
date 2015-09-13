@@ -9,7 +9,7 @@ Expires: March 14, 2016                               September 11, 2015
 
 
             Primitives for Confidential Group Communications
-      draft-abiggs-saag-primitives-for-confidential-group-comms-00
+          draft-abiggs-saag-primitives-for-conf-group-comms-00
 
 Abstract
 
@@ -55,7 +55,7 @@ Copyright Notice
 
 Biggs & Cooley           Expires March 14, 2016                 [Page 1]
 
-Internet-Draft   primitives-for-confidential-group-comms  September 2015
+Internet-Draft       primitives-for-conf-group-comms      September 2015
 
 
    include Simplified BSD License text as described in Section 4.e of
@@ -111,7 +111,7 @@ Table of Contents
 
 Biggs & Cooley           Expires March 14, 2016                 [Page 2]
 
-Internet-Draft   primitives-for-confidential-group-comms  September 2015
+Internet-Draft       primitives-for-conf-group-comms      September 2015
 
 
    Authorization is based on the group membership classification of
@@ -167,7 +167,7 @@ Internet-Draft   primitives-for-confidential-group-comms  September 2015
 
 Biggs & Cooley           Expires March 14, 2016                 [Page 3]
 
-Internet-Draft   primitives-for-confidential-group-comms  September 2015
+Internet-Draft       primitives-for-conf-group-comms      September 2015
 
 
       An entity is a user or automated agent that is uniquely
@@ -223,7 +223,7 @@ Internet-Draft   primitives-for-confidential-group-comms  September 2015
 
 Biggs & Cooley           Expires March 14, 2016                 [Page 4]
 
-Internet-Draft   primitives-for-confidential-group-comms  September 2015
+Internet-Draft       primitives-for-conf-group-comms      September 2015
 
 
 2.  Overview
@@ -279,7 +279,7 @@ Internet-Draft   primitives-for-confidential-group-comms  September 2015
 
 Biggs & Cooley           Expires March 14, 2016                 [Page 5]
 
-Internet-Draft   primitives-for-confidential-group-comms  September 2015
+Internet-Draft       primitives-for-conf-group-comms      September 2015
 
 
    A group membership update operation is a JSON object with two fields:
@@ -335,7 +335,7 @@ Internet-Draft   primitives-for-confidential-group-comms  September 2015
 
 Biggs & Cooley           Expires March 14, 2016                 [Page 6]
 
-Internet-Draft   primitives-for-confidential-group-comms  September 2015
+Internet-Draft       primitives-for-conf-group-comms      September 2015
 
 
    The creator signs the GK such that the authenticity of the associated
@@ -391,7 +391,7 @@ Internet-Draft   primitives-for-confidential-group-comms  September 2015
 
 Biggs & Cooley           Expires March 14, 2016                 [Page 7]
 
-Internet-Draft   primitives-for-confidential-group-comms  September 2015
+Internet-Draft       primitives-for-conf-group-comms      September 2015
 
 
    curator may implement a policy where it permits new group members to
@@ -447,7 +447,7 @@ Internet-Draft   primitives-for-confidential-group-comms  September 2015
 
 Biggs & Cooley           Expires March 14, 2016                 [Page 8]
 
-Internet-Draft   primitives-for-confidential-group-comms  September 2015
+Internet-Draft       primitives-for-conf-group-comms      September 2015
 
 
    smallest hash belongs.  If, as a result of this selection, an entity
@@ -503,7 +503,7 @@ Internet-Draft   primitives-for-confidential-group-comms  September 2015
 
 Biggs & Cooley           Expires March 14, 2016                 [Page 9]
 
-Internet-Draft   primitives-for-confidential-group-comms  September 2015
+Internet-Draft       primitives-for-conf-group-comms      September 2015
 
 
       group communications resource.  The curator will store a received
@@ -559,7 +559,7 @@ Internet-Draft   primitives-for-confidential-group-comms  September 2015
 
 Biggs & Cooley           Expires March 14, 2016                [Page 10]
 
-Internet-Draft   primitives-for-confidential-group-comms  September 2015
+Internet-Draft       primitives-for-conf-group-comms      September 2015
 
 
    5.  User A posts the GMBC and GK as text files to the same file
@@ -615,7 +615,7 @@ Internet-Draft   primitives-for-confidential-group-comms  September 2015
 
 Biggs & Cooley           Expires March 14, 2016                [Page 11]
 
-Internet-Draft   primitives-for-confidential-group-comms  September 2015
+Internet-Draft       primitives-for-conf-group-comms      September 2015
 
 
        by discovering and retrieving user A's public entity key through
@@ -671,7 +671,7 @@ Internet-Draft   primitives-for-confidential-group-comms  September 2015
 
 Biggs & Cooley           Expires March 14, 2016                [Page 12]
 
-Internet-Draft   primitives-for-confidential-group-comms  September 2015
+Internet-Draft       primitives-for-conf-group-comms      September 2015
 
 
    operation "Operation" {
@@ -727,7 +727,7 @@ Internet-Draft   primitives-for-confidential-group-comms  September 2015
 
 Biggs & Cooley           Expires March 14, 2016                [Page 13]
 
-Internet-Draft   primitives-for-confidential-group-comms  September 2015
+Internet-Draft       primitives-for-conf-group-comms      September 2015
 
 
    group-key {
@@ -783,7 +783,7 @@ Internet-Draft   primitives-for-confidential-group-comms  September 2015
 
 Biggs & Cooley           Expires March 14, 2016                [Page 14]
 
-Internet-Draft   primitives-for-confidential-group-comms  September 2015
+Internet-Draft       primitives-for-conf-group-comms      September 2015
 
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
