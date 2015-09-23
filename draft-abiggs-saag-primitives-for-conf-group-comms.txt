@@ -9,7 +9,7 @@ Expires: March 16, 2016                               September 13, 2015
 
 
             Primitives for Confidential Group Communications
-          draft-abiggs-saag-primitives-for-conf-group-comms-00
+          draft-abiggs-saag-primitives-for-conf-group-comms-01
 
 Abstract
 
