@@ -2,4 +2,6 @@
 *.xml
 *.pdf
 *.bak
+.idea
+*.iml
 *~
