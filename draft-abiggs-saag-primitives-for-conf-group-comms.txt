@@ -356,6 +356,8 @@ Internet-Draft       primitives-for-conf-group-comms      September 2015
 
    o  the acct URI of the creator of the GK,
 
+   o  a hash of the GMBC tail block at the time this key was created,
+
    o  an encrypted JWK [RFC7517] that contains the symmetric key
       material, and
 
@@ -384,8 +386,6 @@ Internet-Draft       primitives-for-conf-group-comms      September 2015
    keying material of a GK created by another entity to encrypt it's own
    communications unless it has verified that GK is signed by a current
    member of the group as defined by the GMBC.
-
-
 
 
 
@@ -682,7 +682,6 @@ Internet-Draft       primitives-for-conf-group-comms      September 2015
    gmbc-block {
        "creator": uri,               ; acct URI of creator of the block
        "created": date-time,         ; date and time of block creation
-       "antecedent": string,         ; SHA-256 hash of preceding block
        "operations" [ *: operation ] ; membership update operations
    }
 
@@ -725,6 +724,7 @@ Internet-Draft       primitives-for-conf-group-comms      September 2015
 
 
 
+
 Biggs & Cooley           Expires March 16, 2016                [Page 13]
 
 Internet-Draft       primitives-for-conf-group-comms      September 2015
@@ -734,6 +734,7 @@ Internet-Draft       primitives-for-conf-group-comms      September 2015
        "uri": uri,                   ; URI to identify the GK itself
        "creator": uri,               ; acct URI of creator of the GK
        "created": date-time,         ; the date and time of GK creation
+       "block": string,              ; SHA-256 hash of GMBC block
        "key": wrapped-key            ; encrypted symmetric key material
    }
 
@@ -774,7 +775,6 @@ Internet-Draft       primitives-for-conf-group-comms      September 2015
               Miller, M. and S. Nandakumar, "Key Discovery Service",
               draft-miller-saag-key-discovery-00 (work in progress),
               July 2015.
-
 
 
 

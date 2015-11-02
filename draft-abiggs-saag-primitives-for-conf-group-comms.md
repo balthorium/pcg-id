@@ -156,6 +156,7 @@ The payload of the GK is a JSON object includes attributes representing the foll
 
   * a URI that uniquely identifies the GK,
   * the acct URI of the creator of the GK,
+  * a hash of the GMBC tail block at the time this key was created,
   * an encrypted JWK {{RFC7517}} that contains the symmetric key material, and
   * a timestamp indicating the date and time the GK was created.
 
@@ -272,7 +273,6 @@ operation "Operation" {
 gmbc-block {
     "creator": uri,               ; acct URI of creator of the block
     "created": date-time,         ; date and time of block creation
-    "antecedent": string,         ; SHA-256 hash of preceding block
     "operations" [ *: operation ] ; membership update operations
 }
 ~~~
@@ -312,6 +312,7 @@ group-key {
     "uri": uri,                   ; URI to identify the GK itself
     "creator": uri,               ; acct URI of creator of the GK
     "created": date-time,         ; the date and time of GK creation
+    "block": string,              ; SHA-256 hash of GMBC block
     "key": wrapped-key            ; encrypted symmetric key material
 }
 
