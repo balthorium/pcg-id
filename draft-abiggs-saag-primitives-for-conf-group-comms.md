@@ -55,7 +55,7 @@ This specification defines generalized primitives for use in establishing end-to
  * Group Membership
  * Secure Key Exchange 
   
-Authentication is based on the identification of interoperating entities by acct URI {{RFC7565}} and proof of possession of the private counterpart of a public key discoverable through a key discovery service {{I-D.miller-saag-key-discovery}} available from a well-known URL.
+Authentication is based on the identification of interoperating entities by acct URI {{RFC7565}} and proof of possession of the private counterpart of a public key discoverable through a public key discovery service {{I-D.miller-saag-key-discovery}}.
 
 Authorization is based on the group membership classification of authenticated entities, as represented in the form of a Group Membership Block Chain (GMBC) structure defined by this specification.  Critical properties of the GMBC are tamper-resistance, efficient mutability, broad deployability, and integrity in the context of distributed handling.
 
@@ -63,9 +63,9 @@ The secure exchange of keys is based on existing key wrapping standards which al
 
 A goal of this specification is to define these primitives in such a way as they may be suitable for both centralized and distributed management.  It is also a goal to describe these primitives in terms of accepted standards for cryptographic processing and infrastructure.
 
-A non-goal of this specification is to define the means by which these primitives are exchanged among interoperating entities involved in group communications.  Rather these are building blocks for extending group confidentiality to both new and existing communications and content sharing protocols.  With that in mind, however, this specification does advance the notion of recognizing two general classes of deployment for these primitives: "centralized" and "decentralized".  
+A non-goal of this specification is to define the means by which these primitives are exchanged among interoperating entities.  The intent is only to define these as building blocks for extending group confidentiality to both new and existing communications and content sharing protocols.  With that in mind, however, this specification does advance the notion of recognizing two general classes of deployment for these primitives: "centralized" and "decentralized".
 
-An additional non-goal of this specification is the establishment of mechanisms for the authentication of sender identity for encrypted data exchanged over a confidential group communications resource.  Care is taken to ensure that only authenticated members of a group may decipher secured communications, however the means by which group members may reliably identify the originator of some particular communications data is out of scope for this specification. 
+An additional non-goal of this specification is the establishment of mechanisms for the authentication of sender identity in confidential group communications.  Care is taken to ensure that only authenticated members of a group may decipher secured communications, however the means by which group members may reliably identify originators of encrypted communications is out of scope for this specification.
 
 ## Terminology {#terminology}
 
@@ -84,6 +84,10 @@ genesis block
 group
 
 > A group is a set of entities whose membership wish to engage in secure and authenticated multiparty communications over some group communications resource.
+
+> member
+
+A member is an entity that is classified as such with respect to a particular group membership block chain.  A non-member is any entity not classified as a member.
 
 group communications resource
 
@@ -134,13 +138,13 @@ A group membership update operation is a JSON object with two fields:
 
 In addition to the above attributes the first block of the chain, or genesis block, also includes the following attributes:
 
-  * a URI that uniquely identifies the group communications resource, 
+  * a URI that uniquely identifies the GMBC,
   * the acct URI of the group's curator (optional), and
   * a nonce.
 
 The genesis block must also include at least one "add" operation, though it need not necessarily represent the addition of the entity that created it (i.e. entities may create new groups within which they are not themselves members).
 
-The membership of the group is implicit and may be determined by processing the GMBC in chronological order.  At any given point in time the membership of the group is defined as that set of entities for which there exists, for each entity, a previously introduced block containing an "add" operation for which there does not exist a subsequent but also previously introduced block containing a "remove" operation.
+The membership of the group is implicit and may be determined by processing the GMBC in chronological order.  At any given point in time the membership of the group is defined as that set of entities for which there exists, for each entity, a previously introduced block containing an "add" operation, and for which there does not exist a later, but also previously introduced, block containing a "remove" operation.
 
 To protect against unauthorized tampering the GMBC is validated by verifying the signatures of each block, verifying that each non-genesis block contains a valid hash of the preceding block, and verifying that each block was created and signed by an entity that is among the group's membership as determined by the segment of chain preceding that block.  Block signature verification is made possible through the key discovery mechanisms defined in {{I-D.miller-saag-key-discovery}} and the knowledge of each member's acct URI.
 
@@ -152,7 +156,6 @@ The payload of the GK is a JSON object includes attributes representing the foll
 
   * a URI that uniquely identifies the GK,
   * the acct URI of the creator of the GK,
-  * a hash of the GMBC tail block at the time this key was created,
   * an encrypted JWK {{RFC7517}} that contains the symmetric key material, and
   * a timestamp indicating the date and time the GK was created.
 
@@ -188,7 +191,7 @@ GMBC Post
 
 GMBC Get
 
-> Entities may request all or part of the current GMBC from the curator by providing to the GMBC a hash of the last GMBC block of which they are aware (or 0x0 if they are requesting the entire chain).
+> Entities may request all or part of the current GMBC from the curator by providing to the curator a hash of the last GMBC block of which they are aware (or 0x0 if they are requesting the entire chain).
 
 GMBC Notify (optional)
 
@@ -244,7 +247,7 @@ This use case describes an application that utilizes some instant messaging serv
 
 7. User A receives the GK request from user B, validates that user B was a member of the GMBC at the time the requested GK was created, and returns a copy of the GK created in step 3 with the keying material portion encrypted using the public entity key of user B.
 
-8. User C repeats the procedure outlined for user B in steps 4 through 6.
+8. User C repeats the procedure outlined for user B in steps 5 through 7.
 
 # Primitive Specifications
 
@@ -278,7 +281,7 @@ A GMBC genesis block is specified as a basic block with three additional payload
 
 ~~~
 gmbc-genesis-block {
-    "resource": uri,              ; URI of the group comms. resource
+    "uri": uri,                   ; URI to identify the GMBC itself
     "curator": ?uri,              ; (optional) acct URI of curator
     "nonce": integer,             ; a random one-time numeric value
     gmbc-block                    ; standard block attributes
@@ -309,7 +312,6 @@ group-key {
     "uri": uri,                   ; URI to identify the GK itself
     "creator": uri,               ; acct URI of creator of the GK
     "created": date-time,         ; the date and time of GK creation
-    "block": string,              ; SHA-256 hash of GMBC block
     "key": wrapped-key            ; encrypted symmetric key material
 }
 
@@ -333,3 +335,7 @@ Matt Miller
 \-00
 
   * Initial draft.
+  
+\-01
+
+  * Updates to accommodate flows identified in dependent drafts.
