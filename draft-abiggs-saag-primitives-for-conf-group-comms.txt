@@ -313,7 +313,7 @@ Internet-Draft       primitives-for-conf-group-comms      September 2015
    time the membership of the group is defined as that set of entities
    for which there exists, for each entity, a previously introduced
    block containing an "add" operation, and for which there does not
-   exist a later, but also previously introduced, block containing a
+   exist a later but also previously introduced block containing a
    "remove" operation.
 
    To protect against unauthorized tampering the GMBC is validated by
