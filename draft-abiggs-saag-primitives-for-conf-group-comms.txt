@@ -5,7 +5,7 @@
 Network Working Group                                           A. Biggs
 Internet-Draft                                                 S. Cooley
 Intended status: Standards Track                           Cisco Systems
-Expires: March 16, 2016                               September 13, 2015
+Expires: May 6, 2016                                   November 03, 2015
 
 
             Primitives for Confidential Group Communications
@@ -37,7 +37,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on March 16, 2016.
+   This Internet-Draft will expire on May 6, 2016.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Biggs & Cooley           Expires March 16, 2016                 [Page 1]
+Biggs & Cooley             Expires May 6, 2016                  [Page 1]
 
-Internet-Draft       primitives-for-conf-group-comms      September 2015
+Internet-Draft       primitives-for-conf-group-comms       November 2015
 
 
    include Simplified BSD License text as described in Section 4.e of
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Biggs & Cooley           Expires March 16, 2016                 [Page 2]
+Biggs & Cooley             Expires May 6, 2016                  [Page 2]
 
-Internet-Draft       primitives-for-conf-group-comms      September 2015
+Internet-Draft       primitives-for-conf-group-comms       November 2015
 
 
    Authorization is based on the group membership classification of
@@ -165,9 +165,9 @@ Internet-Draft       primitives-for-conf-group-comms      September 2015
 
 
 
-Biggs & Cooley           Expires March 16, 2016                 [Page 3]
+Biggs & Cooley             Expires May 6, 2016                  [Page 3]
 
-Internet-Draft       primitives-for-conf-group-comms      September 2015
+Internet-Draft       primitives-for-conf-group-comms       November 2015
 
 
       An entity is a user or automated agent that is uniquely
@@ -221,9 +221,9 @@ Internet-Draft       primitives-for-conf-group-comms      September 2015
 
 
 
-Biggs & Cooley           Expires March 16, 2016                 [Page 4]
+Biggs & Cooley             Expires May 6, 2016                  [Page 4]
 
-Internet-Draft       primitives-for-conf-group-comms      September 2015
+Internet-Draft       primitives-for-conf-group-comms       November 2015
 
 
 1.2.  Notational Conventions
@@ -277,9 +277,9 @@ Internet-Draft       primitives-for-conf-group-comms      September 2015
 
 
 
-Biggs & Cooley           Expires March 16, 2016                 [Page 5]
+Biggs & Cooley             Expires May 6, 2016                  [Page 5]
 
-Internet-Draft       primitives-for-conf-group-comms      September 2015
+Internet-Draft       primitives-for-conf-group-comms       November 2015
 
 
    o  an array of group membership update operations,
@@ -333,9 +333,9 @@ Internet-Draft       primitives-for-conf-group-comms      September 2015
 
 
 
-Biggs & Cooley           Expires March 16, 2016                 [Page 6]
+Biggs & Cooley             Expires May 6, 2016                  [Page 6]
 
-Internet-Draft       primitives-for-conf-group-comms      September 2015
+Internet-Draft       primitives-for-conf-group-comms       November 2015
 
 
 2.3.  Key Distribution by Group Keys
@@ -389,9 +389,9 @@ Internet-Draft       primitives-for-conf-group-comms      September 2015
 
 
 
-Biggs & Cooley           Expires March 16, 2016                 [Page 7]
+Biggs & Cooley             Expires May 6, 2016                  [Page 7]
 
-Internet-Draft       primitives-for-conf-group-comms      September 2015
+Internet-Draft       primitives-for-conf-group-comms       November 2015
 
 
    Upon receiving and validating an update to the GMBC, each entity must
@@ -445,9 +445,9 @@ Internet-Draft       primitives-for-conf-group-comms      September 2015
 
 
 
-Biggs & Cooley           Expires March 16, 2016                 [Page 8]
+Biggs & Cooley             Expires May 6, 2016                  [Page 8]
 
-Internet-Draft       primitives-for-conf-group-comms      September 2015
+Internet-Draft       primitives-for-conf-group-comms       November 2015
 
 
    understanding of group membership history.  Such conflicts are
@@ -501,9 +501,9 @@ Internet-Draft       primitives-for-conf-group-comms      September 2015
 
 
 
-Biggs & Cooley           Expires March 16, 2016                 [Page 9]
+Biggs & Cooley             Expires May 6, 2016                  [Page 9]
 
-Internet-Draft       primitives-for-conf-group-comms      September 2015
+Internet-Draft       primitives-for-conf-group-comms       November 2015
 
 
       group.  This may be based on either an explicit or automatic/
@@ -557,9 +557,9 @@ Internet-Draft       primitives-for-conf-group-comms      September 2015
 
 
 
-Biggs & Cooley           Expires March 16, 2016                [Page 10]
+Biggs & Cooley             Expires May 6, 2016                 [Page 10]
 
-Internet-Draft       primitives-for-conf-group-comms      September 2015
+Internet-Draft       primitives-for-conf-group-comms       November 2015
 
 
        genesis block three group membership "add" operations: one for
@@ -613,9 +613,9 @@ Internet-Draft       primitives-for-conf-group-comms      September 2015
 
 
 
-Biggs & Cooley           Expires March 16, 2016                [Page 11]
+Biggs & Cooley             Expires May 6, 2016                 [Page 11]
 
-Internet-Draft       primitives-for-conf-group-comms      September 2015
+Internet-Draft       primitives-for-conf-group-comms       November 2015
 
 
    4.  User A encrypts a message using the keying material of the GK and
@@ -669,9 +669,9 @@ Internet-Draft       primitives-for-conf-group-comms      September 2015
 
 
 
-Biggs & Cooley           Expires March 16, 2016                [Page 12]
+Biggs & Cooley             Expires May 6, 2016                 [Page 12]
 
-Internet-Draft       primitives-for-conf-group-comms      September 2015
+Internet-Draft       primitives-for-conf-group-comms       November 2015
 
 
    operation "Operation" {
@@ -725,9 +725,9 @@ Internet-Draft       primitives-for-conf-group-comms      September 2015
 
 
 
-Biggs & Cooley           Expires March 16, 2016                [Page 13]
+Biggs & Cooley             Expires May 6, 2016                 [Page 13]
 
-Internet-Draft       primitives-for-conf-group-comms      September 2015
+Internet-Draft       primitives-for-conf-group-comms       November 2015
 
 
    group-key {
@@ -781,9 +781,9 @@ Internet-Draft       primitives-for-conf-group-comms      September 2015
 
 
 
-Biggs & Cooley           Expires March 16, 2016                [Page 14]
+Biggs & Cooley             Expires May 6, 2016                 [Page 14]
 
-Internet-Draft       primitives-for-conf-group-comms      September 2015
+Internet-Draft       primitives-for-conf-group-comms       November 2015
 
 
 9.  Appendix B.  Document History
@@ -837,9 +837,9 @@ Internet-Draft       primitives-for-conf-group-comms      September 2015
 
 
 
-Biggs & Cooley           Expires March 16, 2016                [Page 15]
+Biggs & Cooley             Expires May 6, 2016                 [Page 15]
 
-Internet-Draft       primitives-for-conf-group-comms      September 2015
+Internet-Draft       primitives-for-conf-group-comms       November 2015
 
 
 Authors' Addresses
@@ -893,4 +893,4 @@ Authors' Addresses
 
 
 
-Biggs & Cooley           Expires March 16, 2016                [Page 16]
+Biggs & Cooley             Expires May 6, 2016                 [Page 16]
