@@ -39,6 +39,8 @@ normative:
   
   I-D.newton-json-content-rules:
 
+  I-D.ietf-jose-json-web-algorithms:
+
 informative:
   
 --- abstract
@@ -320,6 +322,20 @@ root group-key
 ~~~
 
 The "key" attribute's value is a JWE JSON serialization as defined in {{RFC7516}} with one or more recipients (either one recipient for each member of the group at the time the key was created, or the group curator).  The payload of that JWE is a JWK {{RFC7517}} representing a symmetric key.  
+
+# Mandatory-to-Implement
+
+Implementations MUST support the following JWK key types from {{I-D.ietf-jose-json-web-algorithms}}:
+
+* "RSA" for entity static public/private key
+
+* "oct" for all symmetric keys
+
+Implementations MUST support "PS256" (RSASSA-PSS using SHA-256 and MGF1 with SHA-256) from {{I-D.ietf-jose-json-web-algorithms}} for signatures using entity static public/private key.
+
+Implementations MUST support "RSA-OAEP" (RSAES OAEP using default parameters) from {{I-D.ietf-jose-json-web-algorithms}} for key encryption using entity static public/private keys.
+
+Implementations MUST support "A256GCM" (AES GCM using 256 bit key) from {{I-D.ietf-jose-json-web-algorithms}} for content encryption.
 
 # Security Considerations
 

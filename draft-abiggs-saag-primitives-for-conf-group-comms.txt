@@ -66,7 +66,7 @@ Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
      1.1.  Terminology . . . . . . . . . . . . . . . . . . . . . . .   3
-     1.2.  Notational Conventions  . . . . . . . . . . . . . . . . .   4
+     1.2.  Notational Conventions  . . . . . . . . . . . . . . . . .   5
    2.  Overview  . . . . . . . . . . . . . . . . . . . . . . . . . .   5
      2.1.  Authentication by Entity Public Key . . . . . . . . . . .   5
      2.2.  Authorization by Group Membership Block Chain . . . . . .   5
@@ -81,11 +81,12 @@ Table of Contents
      5.1.  Entity  . . . . . . . . . . . . . . . . . . . . . . . . .  12
      5.2.  Group Membership Block Chain  . . . . . . . . . . . . . .  12
      5.3.  Group Key . . . . . . . . . . . . . . . . . . . . . . . .  13
-   6.  Security Considerations . . . . . . . . . . . . . . . . . . .  14
-   7.  Appendix A. Acknowledgments . . . . . . . . . . . . . . . . .  14
-   8.  Appendix B. Document History  . . . . . . . . . . . . . . . .  14
-   9.  Normative References  . . . . . . . . . . . . . . . . . . . .  14
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  15
+   6.  Mandatory-to-Implement  . . . . . . . . . . . . . . . . . . .  14
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .  14
+   8.  Appendix A. Acknowledgments . . . . . . . . . . . . . . . . .  14
+   9.  Appendix B. Document History  . . . . . . . . . . . . . . . .  15
+   10. Normative References  . . . . . . . . . . . . . . . . . . . .  15
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  16
 
 1.  Introduction
 
@@ -104,8 +105,7 @@ Table of Contents
    counterpart of a public key discoverable through a public key
    discovery service [I-D.miller-saag-key-discovery].
 
-   Authorization is based on the group membership classification of
-   authenticated entities, as represented in the form of a Group
+
 
 
 
@@ -114,6 +114,8 @@ Biggs & Cooley           Expires March 16, 2016                 [Page 2]
 Internet-Draft       primitives-for-conf-group-comms      September 2015
 
 
+   Authorization is based on the group membership classification of
+   authenticated entities, as represented in the form of a Group
    Membership Block Chain (GMBC) structure defined by this
    specification.  Critical properties of the GMBC are tamper-
    resistance, efficient mutability, broad deployability, and integrity
@@ -159,8 +161,6 @@ Internet-Draft       primitives-for-conf-group-comms      September 2015
 
    entity
 
-      An entity is a user or automated agent that is uniquely
-      identifiable by an acct URI and for which there exists a key
 
 
 
@@ -170,6 +170,8 @@ Biggs & Cooley           Expires March 16, 2016                 [Page 3]
 Internet-Draft       primitives-for-conf-group-comms      September 2015
 
 
+      An entity is a user or automated agent that is uniquely
+      identifiable by an acct URI and for which there exists a key
       discovery service [I-D.miller-saag-key-discovery] through which
       public keys may be obtained for that URI.
 
@@ -213,10 +215,8 @@ Internet-Draft       primitives-for-conf-group-comms      September 2015
    security-related terms in this document are to be understood in the
    sense defined in [RFC4949].
 
-1.2.  Notational Conventions
 
-   In this document, the key words "MUST", "MUST NOT", "REQUIRED",
-   "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY",
+
 
 
 
@@ -226,6 +226,10 @@ Biggs & Cooley           Expires March 16, 2016                 [Page 4]
 Internet-Draft       primitives-for-conf-group-comms      September 2015
 
 
+1.2.  Notational Conventions
+
+   In this document, the key words "MUST", "MUST NOT", "REQUIRED",
+   "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY",
    and "OPTIONAL" are to be interpreted as described in BCP 14, RFC 2119
    [RFC2119].
 
@@ -271,16 +275,14 @@ Internet-Draft       primitives-for-conf-group-comms      September 2015
 
    o  the acct URI of the entity that created the block,
 
-   o  an array of group membership update operations,
-
-
-
 
 
 Biggs & Cooley           Expires March 16, 2016                 [Page 5]
 
 Internet-Draft       primitives-for-conf-group-comms      September 2015
 
+
+   o  an array of group membership update operations,
 
    o  a timestamp indicating the date and time of the block's creation,
       and
@@ -325,8 +327,6 @@ Internet-Draft       primitives-for-conf-group-comms      September 2015
    through the key discovery mechanisms defined in
    [I-D.miller-saag-key-discovery] and the knowledge of each member's
    acct URI.
-
-
 
 
 
@@ -746,12 +746,32 @@ Internet-Draft       primitives-for-conf-group-comms      September 2015
    curator).  The payload of that JWE is a JWK [RFC7517] representing a
    symmetric key.
 
-6.  Security Considerations
+6.  Mandatory-to-Implement
+
+   Implementations MUST support the following JWK key types from
+   [I-D.ietf-jose-json-web-algorithms]:
+
+   o  "RSA" for entity static public/private key
+
+   o  "oct" for all symmetric keys
+
+   Implementations MUST support "PS256" (RSASSA-PSS using SHA-256 and
+   MGF1 with SHA-256) from [I-D.ietf-jose-json-web-algorithms] for
+   signatures using entity static public/private key.
+
+   Implementations MUST support "RSA-OAEP" (RSAES OAEP using default
+   parameters) from [I-D.ietf-jose-json-web-algorithms] for key
+   encryption using entity static public/private keys.
+
+   Implementations MUST support "A256GCM" (AES GCM using 256 bit key)
+   from [I-D.ietf-jose-json-web-algorithms] for content encryption.
+
+7.  Security Considerations
 
    Security considerations are discussed throughout this document.
    Additional considerations may be added here as needed.
 
-7.  Appendix A.  Acknowledgments
+8.  Appendix A.  Acknowledgments
 
    This specification is the work of several contributors.  In
    particular, the following individuals contributed ideas, feedback,
@@ -759,7 +779,14 @@ Internet-Draft       primitives-for-conf-group-comms      September 2015
 
    Matt Miller
 
-8.  Appendix B.  Document History
+
+
+Biggs & Cooley           Expires March 16, 2016                [Page 14]
+
+Internet-Draft       primitives-for-conf-group-comms      September 2015
+
+
+9.  Appendix B.  Document History
 
    -00
 
@@ -769,22 +796,16 @@ Internet-Draft       primitives-for-conf-group-comms      September 2015
 
    o  Updates to accommodate flows identified in dependent drafts.
 
-9.  Normative References
+10.  Normative References
+
+   [I-D.ietf-jose-json-web-algorithms]
+              Jones, M., "JSON Web Algorithms (JWA)", draft-ietf-jose-
+              json-web-algorithms-33 (work in progress), September 2014.
 
    [I-D.miller-saag-key-discovery]
               Miller, M. and S. Nandakumar, "Key Discovery Service",
               draft-miller-saag-key-discovery-00 (work in progress),
               July 2015.
-
-
-
-
-
-
-Biggs & Cooley           Expires March 16, 2016                [Page 14]
-
-Internet-Draft       primitives-for-conf-group-comms      September 2015
-
 
    [I-D.newton-json-content-rules]
               Newton, A., "A Language for Rules Describing JSON
@@ -810,6 +831,16 @@ Internet-Draft       primitives-for-conf-group-comms      September 2015
 
    [RFC7565]  Saint-Andre, P., "The 'acct' URI Scheme", RFC 7565, May
               2015.
+
+
+
+
+
+
+Biggs & Cooley           Expires March 16, 2016                [Page 15]
+
+Internet-Draft       primitives-for-conf-group-comms      September 2015
+
 
 Authors' Addresses
 
@@ -837,4 +868,29 @@ Authors' Addresses
 
 
 
-Biggs & Cooley           Expires March 16, 2016                [Page 15]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Biggs & Cooley           Expires March 16, 2016                [Page 16]
