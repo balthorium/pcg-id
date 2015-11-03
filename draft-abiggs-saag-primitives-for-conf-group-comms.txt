@@ -9,7 +9,7 @@ Expires: May 6, 2016                                   November 03, 2015
 
 
             Primitives for Confidential Group Communications
-          draft-abiggs-saag-primitives-for-conf-group-comms-01
+          draft-abiggs-saag-primitives-for-conf-group-comms-02
 
 Abstract
 
@@ -315,8 +315,8 @@ Internet-Draft       primitives-for-conf-group-comms       November 2015
    time the membership of the group is defined as that set of entities
    for which there exists, for each entity, a previously introduced
    block containing an "add" operation, and for which there does not
-   exist a later but also previously introduced block containing a
-   "remove" operation.
+   exist a subsequent block containing a "remove" operation appended
+   prior to the point in time of interest.
 
    To protect against unauthorized tampering the GMBC is validated by
    verifying the signatures of each block, verifying that each non-

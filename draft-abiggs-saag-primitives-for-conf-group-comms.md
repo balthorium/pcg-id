@@ -1,7 +1,7 @@
 ---
 title: Primitives for Confidential Group Communications
 abbrev: primitives-for-conf-group-comms
-docname: draft-abiggs-saag-primitives-for-conf-group-comms-01
+docname: draft-abiggs-saag-primitives-for-conf-group-comms-02
 date: 2015-11-03
 category: std
 ipr: trust200902
@@ -146,7 +146,7 @@ In addition to the above attributes the first block of the chain, or genesis blo
 
 The genesis block must also include at least one "add" operation, though it need not necessarily represent the addition of the entity that created it (i.e. entities may create new groups within which they are not themselves members).
 
-The membership of the group is implicit and may be determined by processing the GMBC in chronological order.  At any given point in time the membership of the group is defined as that set of entities for which there exists, for each entity, a previously introduced block containing an "add" operation, and for which there does not exist a later but also previously introduced block containing a "remove" operation.
+The membership of the group is implicit and may be determined by processing the GMBC in chronological order.  At any given point in time the membership of the group is defined as that set of entities for which there exists, for each entity, a previously introduced block containing an "add" operation, and for which there does not exist a subsequent block containing a "remove" operation appended prior to the point in time of interest.
 
 To protect against unauthorized tampering the GMBC is validated by verifying the signatures of each block, verifying that each non-genesis block contains a valid hash of the preceding block, and verifying that each block was created and signed by an entity that is among the group's membership as determined by the segment of chain preceding that block.  Block signature verification is made possible through the key discovery mechanisms defined in {{I-D.miller-saag-key-discovery}} and the knowledge of each member's acct URI.
 
